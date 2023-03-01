@@ -60,6 +60,7 @@ func main() {
 		// Destructive tests (create, update, delete, etc.)
 		tests = append(tests,
 			dt.tags,
+			dt.comments,
 		)
 	}
 
