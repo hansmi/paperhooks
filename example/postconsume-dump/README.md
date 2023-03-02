@@ -5,7 +5,7 @@ information to its output.
 
 Paperless always appends a few arguments while all relevant information comes
 from environment variables. A wrapper script is the easiest way to ignore the
-additional arguments them:
+additional arguments:
 
 ```shell
 #!/bin/bash
