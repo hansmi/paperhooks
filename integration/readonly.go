@@ -202,3 +202,14 @@ func (t *readOnlyTests) documents(ctx context.Context) error {
 
 	return nil
 }
+
+func (t *readOnlyTests) tasks(ctx context.Context) error {
+	tasks, _, err := t.client.ListTasks(ctx)
+	if err != nil {
+		return fmt.Errorf("listing tasks failed: %w", err)
+	}
+
+	t.logger.Printf("Received %d tasks.", len(tasks))
+
+	return nil
+}

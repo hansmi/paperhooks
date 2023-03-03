@@ -48,6 +48,7 @@ func main() {
 		ro.documentTypes,
 		ro.storagePaths,
 		ro.documents,
+		ro.tasks,
 	}
 
 	if *destructive {
