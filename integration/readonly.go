@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 
 	"github.com/hansmi/paperhooks/pkg/client"
 )
@@ -210,6 +212,32 @@ func (t *readOnlyTests) tasks(ctx context.Context) error {
 	}
 
 	t.logger.Printf("Received %d tasks.", len(tasks))
+
+	return nil
+}
+
+func (t *readOnlyTests) logs(ctx context.Context) error {
+	logs, _, err := t.client.ListLogs(ctx)
+	if err != nil {
+		return fmt.Errorf("listing logs failed: %w", err)
+	}
+
+	t.logger.Printf("Received log names: %v", logs)
+
+	for _, name := range logs {
+		entries, _, err := t.client.GetLog(ctx, name)
+		if err != nil {
+			var re *client.RequestError
+
+			if !(errors.As(err, &re) && re.StatusCode == http.StatusNotFound) {
+				return fmt.Errorf("fetching entries for log %q failed: %w", name, err)
+			}
+
+			entries = nil
+		}
+
+		t.logger.Printf("Received %d entries for log %q.", len(entries), name)
+	}
 
 	return nil
 }

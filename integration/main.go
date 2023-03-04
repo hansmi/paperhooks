@@ -49,6 +49,7 @@ func main() {
 		ro.storagePaths,
 		ro.documents,
 		ro.tasks,
+		ro.logs,
 	}
 
 	if *destructive {
