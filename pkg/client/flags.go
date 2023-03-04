@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 	"unicode"
 )
 
@@ -43,6 +44,9 @@ type Flags struct {
 
 	// HTTP headers to set on all requests.
 	Header http.Header
+
+	// Timezone for parsing timestamps without offset.
+	ServerTimezone string
 }
 
 // This function makes no attempt to deconflict different authentication
@@ -89,9 +93,10 @@ func (f *Flags) BuildOptions() (*Options, error) {
 	}
 
 	opts := &Options{
-		BaseURL:   f.BaseURL,
-		DebugMode: f.DebugMode,
-		Header:    http.Header{},
+		BaseURL:        f.BaseURL,
+		DebugMode:      f.DebugMode,
+		Header:         http.Header{},
+		ServerLocation: time.Local,
 	}
 
 	for name, values := range f.Header {
@@ -105,6 +110,14 @@ func (f *Flags) BuildOptions() (*Options, error) {
 		return nil, err
 	} else {
 		opts.Auth = auth
+	}
+
+	if f.ServerTimezone != "" {
+		if loc, err := time.LoadLocation(f.ServerTimezone); err != nil {
+			return nil, err
+		} else {
+			opts.ServerLocation = loc
+		}
 	}
 
 	return opts, nil

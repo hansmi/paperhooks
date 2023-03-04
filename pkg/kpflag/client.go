@@ -1,6 +1,9 @@
 package kpflag
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/hansmi/paperhooks/internal/kpflagvalue"
 	"github.com/hansmi/paperhooks/pkg/client"
 )
@@ -34,6 +37,10 @@ func RegisterClient(g FlagGroup, f *client.Flags) {
 		g.Flag("paperless_header", "HTTP headers to set on all requests to Paperless.").
 			PlaceHolder("KEY:VALUE").
 			Envar("PAPERLESS_HEADER"), &f.Header)
+
+	g.Flag("paperless_server_timezone", fmt.Sprintf("Timezone for parsing timestamps. Defaults to %q.", time.Local.String())).
+		PlaceHolder("AREA/LOCATION").
+		Envar("PAPERLESS_SERVER_TIMEZONE").StringVar(&f.ServerTimezone)
 
 	g.Flag("paperless_client_debug", "Enable verbose logging messages.").
 		BoolVar(&f.DebugMode)

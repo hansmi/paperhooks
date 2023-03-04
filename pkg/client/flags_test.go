@@ -5,13 +5,14 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/hansmi/paperhooks/internal/testutil"
 )
 
-func TestRegisterClient(t *testing.T) {
+func TestFlagsBuild(t *testing.T) {
 	for _, tc := range []struct {
 		name    string
 		flags   Flags
@@ -38,7 +39,8 @@ func TestRegisterClient(t *testing.T) {
 					"X-Header": []string{"value"},
 					"Another":  []string{"value2"},
 				},
-				Auth: &TokenAuth{"abcdef22379"},
+				Auth:           &TokenAuth{"abcdef22379"},
+				ServerLocation: time.Local,
 			},
 		},
 		{
@@ -56,7 +58,8 @@ func TestRegisterClient(t *testing.T) {
 				Header: http.Header{
 					"X-Header": []string{"foobar"},
 				},
-				Auth: &TokenAuth{"content"},
+				Auth:           &TokenAuth{"content"},
+				ServerLocation: time.Local,
 			},
 		},
 		{
@@ -73,7 +76,8 @@ func TestRegisterClient(t *testing.T) {
 					Username: "admin",
 					Password: "password",
 				},
-				DebugMode: true,
+				DebugMode:      true,
+				ServerLocation: time.Local,
 			},
 		},
 		{
@@ -93,6 +97,17 @@ func TestRegisterClient(t *testing.T) {
 			},
 			wantErr: os.ErrNotExist,
 		},
+		{
+			name: "explicit timezone",
+			flags: Flags{
+				BaseURL:        "http://localhost/timezone",
+				ServerTimezone: "UTC",
+			},
+			want: Options{
+				BaseURL:        "http://localhost/timezone",
+				ServerLocation: time.UTC,
+			},
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := tc.flags.BuildOptions()
@@ -102,7 +117,7 @@ func TestRegisterClient(t *testing.T) {
 			}
 
 			if err == nil {
-				if diff := cmp.Diff(tc.want, *got, cmpopts.EquateEmpty(), cmp.AllowUnexported(Options{})); diff != "" {
+				if diff := cmp.Diff(tc.want, *got, cmpopts.EquateEmpty(), cmp.AllowUnexported(Options{}, time.Location{})); diff != "" {
 					t.Errorf("Options diff (-want +got):\n%s", diff)
 				}
 			}

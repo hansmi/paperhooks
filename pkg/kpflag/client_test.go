@@ -73,6 +73,15 @@ func TestRegisterClient(t *testing.T) {
 				DebugMode:    true,
 			},
 		},
+		{
+			name: "server timezone",
+			env: map[string]string{
+				"PAPERLESS_SERVER_TIMEZONE": "Australia/Sydney",
+			},
+			want: client.Flags{
+				ServerTimezone: "Australia/Sydney",
+			},
+		},
 	} {
 		flagParseTest{
 			name: tc.name,

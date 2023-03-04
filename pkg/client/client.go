@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -27,12 +28,17 @@ type Options struct {
 	// HTTP headers to set on all requests.
 	Header http.Header
 
+	// Server's timezone for parsing timestamps without explicit offset.
+	// Defaults to [time.Local].
+	ServerLocation *time.Location
+
 	// Override the default HTTP transport.
 	transport http.RoundTripper
 }
 
 type Client struct {
 	logger Logger
+	loc    *time.Location
 	r      *resty.Client
 }
 
@@ -44,6 +50,10 @@ func New(opts Options) *Client {
 		} else {
 			opts.Logger = &discardLogger{}
 		}
+	}
+
+	if opts.ServerLocation == nil {
+		opts.ServerLocation = time.Local
 	}
 
 	r := resty.New().
@@ -77,6 +87,7 @@ func New(opts Options) *Client {
 
 	return &Client{
 		logger: opts.Logger,
+		loc:    opts.ServerLocation,
 		r:      r,
 	}
 }
