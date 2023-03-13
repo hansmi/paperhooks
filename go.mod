@@ -9,7 +9,7 @@ require (
 	github.com/google/go-querystring v1.1.0
 	github.com/jarcoal/httpmock v1.3.0
 	github.com/kr/pretty v0.3.1
-	go.uber.org/multierr v1.9.0
+	go.uber.org/multierr v1.10.0
 )
 
 require (
@@ -17,6 +17,5 @@ require (
 	github.com/kr/text v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/xhit/go-str2duration/v2 v2.1.0 // indirect
-	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
 )
