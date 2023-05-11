@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+
+run_integration() {
+  PAPERLESS_URL=${PAPERLESS_URL:-http://localhost:8124/} \
+  PAPERLESS_AUTH_USERNAME=${PAPERLESS_AUTH_USERNAME:-admin} \
+  PAPERLESS_AUTH_PASSWORD=${PAPERLESS_AUTH_PASSWORD:-insecurepassword} \
+  go run github.com/hansmi/paperhooks/integration "$@"
+}
+
+echo 'Run integration test in non-destructive mode' >&2
+run_integration
+
+echo 'Run integration test in destructive mode' >&2
+run_integration --destructive
+
+# vim: set sw=2 sts=2 et :

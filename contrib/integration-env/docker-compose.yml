@@ -1,0 +1,20 @@
+# An ephemeral environment for running paperhooks integration tests.
+
+version: "3.4"
+services:
+  broker:
+    image: docker.io/library/redis:7-alpine
+    restart: on-failure
+
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: on-failure
+    depends_on:
+      - broker
+    ports:
+      - "${INTEGRATION_HOST_PORT:?}:8000"
+    env_file: paperless.env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+
+# vim: set sw=2 sts=2 et :
