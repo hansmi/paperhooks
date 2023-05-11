@@ -1,6 +1,6 @@
 # Post-consumption hook logging debug information
 
-This example is a [post-consumption hook][paperless-hooks] writing a bit debug
+This example is a [post-consumption hook][paperless-hooks] writing debug
 information to its output.
 
 Paperless always appends a few arguments while all relevant information comes
