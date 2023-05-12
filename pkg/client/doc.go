@@ -1,4 +1,4 @@
-// Package client implements the the [REST API] exposed by [Paperless-ngx].
+// Package client implements the [REST API] exposed by [Paperless-ngx].
 // Paperless-ngx is a document management system transforming physical
 // documents into a searchable online archive.
 //
