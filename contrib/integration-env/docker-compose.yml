@@ -16,5 +16,6 @@ services:
     env_file: paperless.env
     environment:
       PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_URL: "http://localhost:${INTEGRATION_HOST_PORT:?}"
 
 # vim: set sw=2 sts=2 et :
