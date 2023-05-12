@@ -117,7 +117,7 @@ func TestFlagsBuild(t *testing.T) {
 			}
 
 			if err == nil {
-				if diff := cmp.Diff(tc.want, *got, cmpopts.EquateEmpty(), cmp.AllowUnexported(Options{}, time.Location{})); diff != "" {
+				if diff := cmp.Diff(tc.want, *got, cmpopts.EquateEmpty(), cmp.AllowUnexported(Options{}), testutil.EquateTimeLocation()); diff != "" {
 					t.Errorf("Options diff (-want +got):\n%s", diff)
 				}
 			}
