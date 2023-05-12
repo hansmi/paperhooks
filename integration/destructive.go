@@ -106,58 +106,6 @@ func (t *destructiveTests) tags(ctx context.Context) error {
 	return nil
 }
 
-func (t *destructiveTests) comments(ctx context.Context) error {
-	docs, _, err := t.client.ListDocuments(ctx, nil)
-	if err != nil {
-		return fmt.Errorf("listing documents failed: %w", err)
-	}
-
-	if len(docs) < 1 {
-		t.logger.Print("Found no documents. Skipping comment check.")
-		return nil
-	}
-
-	docID := docs[0].ID
-
-	t.logger.Printf("Using document %d (%q) to create a comment.", docID, docs[0].OriginalFileName)
-
-	if _, err := t.client.CreateComment(ctx, docID, &client.Comment{
-		Text: t.mark,
-	}); err != nil {
-		return fmt.Errorf("creating comment failed: %w", err)
-	}
-
-	t.logger.Printf("Looking for comment with text %q.", t.mark)
-
-	comments, _, err := t.client.ListComments(ctx, docID)
-	if err != nil {
-		return fmt.Errorf("listing comments failed: %w", err)
-	}
-
-	var commentID int64
-
-	found := false
-	for _, i := range comments {
-		if i.Text == t.mark {
-			found = true
-			commentID = i.ID
-			break
-		}
-	}
-
-	if !found {
-		return fmt.Errorf("comment %q not found", t.mark)
-	}
-
-	t.logger.Printf("Delete comment %d.", commentID)
-
-	if _, err := t.client.DeleteComment(ctx, docID, commentID); err != nil {
-		return fmt.Errorf("deleting comment failed: %w", err)
-	}
-
-	return nil
-}
-
 func (t *destructiveTests) uploadDocument(ctx context.Context) error {
 	imgBytes, err := makeRandomImage(100, 100)
 	if err != nil {

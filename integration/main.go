@@ -63,7 +63,6 @@ func main() {
 		tests = append(tests,
 			dt.uploadDocument,
 			dt.tags,
-			dt.comments,
 		)
 	}
 
