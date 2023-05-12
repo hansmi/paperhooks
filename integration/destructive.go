@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
@@ -153,6 +154,27 @@ func (t *destructiveTests) comments(ctx context.Context) error {
 	if _, err := t.client.DeleteComment(ctx, docID, commentID); err != nil {
 		return fmt.Errorf("deleting comment failed: %w", err)
 	}
+
+	return nil
+}
+
+func (t *destructiveTests) uploadDocument(ctx context.Context) error {
+	imgBytes, err := makeRandomImage(100, 100)
+	if err != nil {
+		return err
+	}
+
+	result, _, err := t.client.UploadDocument(ctx,
+		bytes.NewReader(imgBytes),
+		&client.DocumentUploadOptions{
+			Filename: t.mark + ".png",
+			Title:    t.mark,
+		})
+	if err != nil {
+		return fmt.Errorf("uploading document failed: %w", err)
+	}
+
+	t.logger.Printf("Task ID from upload: %s", result.TaskID)
 
 	return nil
 }

@@ -3,7 +3,11 @@ package client
 import (
 	"context"
 	"fmt"
+	"io"
+	"path/filepath"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 type Document struct {
@@ -120,4 +124,57 @@ func (c *Client) GetDocumentMetadata(ctx context.Context, id int64) (*DocumentMe
 	}
 
 	return resp.Result().(*DocumentMetadata), nil
+}
+
+type DocumentUploadOptions struct {
+	Filename string `url:"-"`
+
+	// Title for the document.
+	Title string `url:"title,omitempty"`
+
+	// Datetime at which the document was created.
+	Created time.Time `url:"created,omitempty"`
+
+	// ID of a correspondent for the document.
+	Correspondent *int64 `url:"correspondent,omitempty"`
+
+	// ID of a document type for the document.
+	DocumentType *int64 `url:"document_type,omitempty"`
+
+	// Tag IDs for the document.
+	Tags []int64 `url:"tags,omitempty"`
+
+	// Archive serial number to set on the document.
+	ArchiveSerialNumber *int64 `url:"archive_serial_number,omitempty"`
+}
+
+type DocumentUpload struct {
+	TaskID string
+}
+
+// Upload a file. Returns immediately and without error if the document
+// consumption process was started successfully. No additional status
+// information about the consumption process is available immediately. Poll the
+// returned task ID to wait for the consumption.
+func (c *Client) UploadDocument(ctx context.Context, r io.Reader, opts *DocumentUploadOptions) (*DocumentUpload, *Response, error) {
+	req := c.newRequest(ctx).
+		SetFileReader("document", filepath.Base(opts.Filename), r)
+
+	if values, err := query.Values(opts); err != nil {
+		return nil, nil, err
+	} else {
+		req.SetFormDataFromValues(values)
+	}
+
+	resp, err := req.Post("api/documents/post_document/")
+
+	if err := convertError(err, resp); err != nil {
+		return nil, wrapResponse(resp), err
+	}
+
+	result := &DocumentUpload{
+		TaskID: string(resp.Body()),
+	}
+
+	return result, wrapResponse(resp), nil
 }
