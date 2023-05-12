@@ -43,5 +43,6 @@ func RegisterClient(g FlagGroup, f *client.Flags) {
 		Envar("PAPERLESS_SERVER_TIMEZONE").StringVar(&f.ServerTimezone)
 
 	g.Flag("paperless_client_debug", "Enable verbose logging messages.").
+		Envar("PAPERLESS_CLIENT_DEBUG").
 		BoolVar(&f.DebugMode)
 }

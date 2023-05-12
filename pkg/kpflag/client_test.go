@@ -46,6 +46,7 @@ func TestRegisterClient(t *testing.T) {
 				"PAPERLESS_AUTH_TOKEN":      "envtoken",
 				"PAPERLESS_AUTH_TOKEN_FILE": tokenfile,
 				"PAPERLESS_HEADER":          "x-header:foobar",
+				"PAPERLESS_CLIENT_DEBUG":    "1",
 			},
 			want: client.Flags{
 				BaseURL: "http://localhost:1234/env",
@@ -54,6 +55,7 @@ func TestRegisterClient(t *testing.T) {
 				},
 				AuthToken:     "envtoken",
 				AuthTokenFile: tokenfile,
+				DebugMode:     true,
 			},
 		},
 		{
