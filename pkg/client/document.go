@@ -157,7 +157,10 @@ type DocumentUpload struct {
 // information about the consumption process is available immediately. Poll the
 // returned task ID to wait for the consumption.
 func (c *Client) UploadDocument(ctx context.Context, r io.Reader, opts *DocumentUploadOptions) (*DocumentUpload, *Response, error) {
+	result := &DocumentUpload{}
+
 	req := c.newRequest(ctx).
+		SetResult(&result.TaskID).
 		SetFileReader("document", filepath.Base(opts.Filename), r)
 
 	if values, err := query.Values(opts); err != nil {
@@ -170,10 +173,6 @@ func (c *Client) UploadDocument(ctx context.Context, r io.Reader, opts *Document
 
 	if err := convertError(err, resp); err != nil {
 		return nil, wrapResponse(resp), err
-	}
-
-	result := &DocumentUpload{
-		TaskID: string(resp.Body()),
 	}
 
 	return result, wrapResponse(resp), nil

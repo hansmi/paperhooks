@@ -85,7 +85,7 @@ func TestUploadDocument(t *testing.T) {
 			name: "success",
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterResponder(http.MethodPost, "/api/documents/post_document/",
-					httpmock.NewStringResponder(http.StatusOK, `e068eb08-cf70-4755-8087-3cf0644f3c7b`))
+					httpmock.NewStringResponder(http.StatusOK, `"e068eb08-cf70-4755-8087-3cf0644f3c7b"`))
 			},
 			r: strings.NewReader("test content"),
 			want: &DocumentUpload{
@@ -97,7 +97,7 @@ func TestUploadDocument(t *testing.T) {
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterMatcherResponder(http.MethodPost, "/api/documents/post_document/",
 					httpmock.BodyContainsString("\ndoctitle"),
-					httpmock.NewStringResponder(http.StatusOK, `0dbf0a2b-3a09-4d7b-96bf-51544dda8427`))
+					httpmock.NewStringResponder(http.StatusOK, `"0dbf0a2b-3a09-4d7b-96bf-51544dda8427"`))
 			},
 			r: strings.NewReader("more content"),
 			opts: DocumentUploadOptions{
