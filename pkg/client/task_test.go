@@ -133,3 +133,95 @@ func TestListTasks(t *testing.T) {
 		})
 	}
 }
+
+func TestGetTask(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		setup   func(*testing.T, *httpmock.MockTransport)
+		id      string
+		wantErr error
+		want    Task
+	}{
+		{
+			name: "empty",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/api/tasks/",
+					httpmock.NewStringResponder(http.StatusOK, `[]`))
+			},
+			wantErr: &RequestError{
+				StatusCode: http.StatusNotFound,
+				Message:    `task "" not found`,
+			},
+		},
+		{
+			name: "bad JSON",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/api/tasks/",
+					httpmock.NewStringResponder(http.StatusOK, `{`))
+			},
+			wantErr: cmpopts.AnyError,
+		},
+		{
+			name: "multiple",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/api/tasks/",
+					httpmock.NewStringResponder(http.StatusOK, `[
+						{
+							"id": 27781,
+							"task_id": "c329f0f3-4d11-4be2-b6d0-16fd3c551215"
+						}, {
+							"id": 17165,
+							"task_id": "2b83ba79-1fe5-4cf7-9b1e-69fd52494f86"
+						}
+					]`))
+			},
+			id: "req-id",
+			wantErr: &RequestError{
+				StatusCode: http.StatusMultipleChoices,
+				Message:    `received 2 tasks for ID "req-id"`,
+			},
+		},
+		{
+			name: "success",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tasks/",
+					"task_id=7b0e2c15e928",
+					httpmock.NewStringResponder(http.StatusOK, `[
+						{
+							"id": 7959,
+							"task_id": "608a5b03-dd7a-4888-9cbc-14000d4655ba",
+							"task_file_name": "task.pdf"
+						}
+					]`))
+			},
+			id: "7b0e2c15e928",
+			want: Task{
+				ID:           7959,
+				TaskID:       "608a5b03-dd7a-4888-9cbc-14000d4655ba",
+				TaskFileName: String("task.pdf"),
+			},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			transport := newMockTransport(t)
+
+			tc.setup(t, transport)
+
+			c := New(Options{
+				transport: transport,
+			})
+
+			got, _, err := c.GetTask(context.Background(), tc.id)
+
+			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
+				t.Errorf("GetTask() error diff (-want +got):\n%s", diff)
+			}
+
+			if err == nil {
+				if diff := cmp.Diff(tc.want, *got, cmpopts.EquateEmpty()); diff != "" {
+					t.Errorf("GetTask() diff (-want +got):\n%s", diff)
+				}
+			}
+		})
+	}
+}

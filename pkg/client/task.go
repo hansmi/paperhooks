@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -86,13 +87,41 @@ type Task struct {
 }
 
 func (c *Client) ListTasks(ctx context.Context) ([]Task, *Response, error) {
-	req := c.newRequest(ctx).SetResult([]Task(nil))
-
-	resp, err := req.Get("api/tasks/")
+	resp, err := c.newRequest(ctx).
+		SetResult([]Task(nil)).
+		Get("api/tasks/")
 
 	if err := convertError(err, resp); err != nil {
 		return nil, wrapResponse(resp), err
 	}
 
 	return *resp.Result().(*[]Task), wrapResponse(resp), nil
+}
+
+func (c *Client) GetTask(ctx context.Context, taskID string) (*Task, *Response, error) {
+	resp, err := c.newRequest(ctx).
+		SetResult([]*Task(nil)).
+		SetQueryParam("task_id", taskID).
+		Get("api/tasks/")
+
+	if err := convertError(err, resp); err != nil {
+		return nil, wrapResponse(resp), err
+	}
+
+	switch tasks := *resp.Result().(*[]*Task); len(tasks) {
+	case 0:
+		return nil, wrapResponse(resp), &RequestError{
+			StatusCode: http.StatusNotFound,
+			Message:    fmt.Sprintf("task %q not found", taskID),
+		}
+
+	case 1:
+		return tasks[0], wrapResponse(resp), nil
+
+	default:
+		return nil, wrapResponse(resp), &RequestError{
+			StatusCode: http.StatusMultipleChoices,
+			Message:    fmt.Sprintf("received %d tasks for ID %q", len(tasks), taskID),
+		}
+	}
 }
