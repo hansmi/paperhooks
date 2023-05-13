@@ -14,7 +14,7 @@ physical documents into a searchable online archive.
 
 ## Run integration tests
 
-[Integration tests](https://en.wikipedia.org/wiki/Integration_testing) executes
+[Integration tests](https://en.wikipedia.org/wiki/Integration_testing) execute
 operations against a real Paperless-ngx server running in a Docker container.
 The wrapper script enables _destructive_ tests and should not be run against
 a production instance.
