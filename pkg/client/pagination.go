@@ -33,7 +33,7 @@ func (t *PageToken) EncodeValues(_ string, v *url.Values) error {
 		}
 	}
 
-	// The page size always set in the URL to never rely on the server's
+	// The page size is always set in the URL to never rely on the server's
 	// default.
 	v.Set("page_size", strconv.FormatUint(uint64(size), 10))
 
