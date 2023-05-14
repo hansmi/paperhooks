@@ -8,6 +8,7 @@ import (
 	"github.com/hansmi/paperhooks/pkg/client"
 )
 
+// RegisterClient adds flags for creating a Paperless-ngx API client.
 func RegisterClient(g FlagGroup, f *client.Flags) {
 	g.Flag("paperless_url", "Base URL for accessing Paperless.").
 		PlaceHolder("URL").

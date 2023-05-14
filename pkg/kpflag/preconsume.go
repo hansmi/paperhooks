@@ -2,6 +2,8 @@ package kpflag
 
 import "github.com/hansmi/paperhooks/pkg/preconsume"
 
+// RegisterPreConsume adds flags capturing Paperless-ngx pre-consumption
+// command information.
 func RegisterPreConsume(g FlagGroup, f *preconsume.Flags) {
 	g.Flag("document_source_path", "Original path of the consumed document.").
 		PlaceHolder("PATH").

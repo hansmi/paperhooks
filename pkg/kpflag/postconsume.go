@@ -5,6 +5,8 @@ import (
 	"github.com/hansmi/paperhooks/pkg/postconsume"
 )
 
+// RegisterPostConsume adds flags capturing Paperless-ngx post-consumption
+// command information.
 func RegisterPostConsume(g FlagGroup, f *postconsume.Flags) {
 	g.Flag("document_id", "Primary database key of the document.").
 		PlaceHolder("INT").
