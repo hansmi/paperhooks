@@ -5,8 +5,8 @@
 // # Authentication
 //
 // Paperless-ngx supports multiple [authentication schemes].
-// [UsernamePasswordAuth] implements HTTP basic authentication and [TokenAuth],
-// well, tokens.
+// [UsernamePasswordAuth] implements HTTP basic authentication and [TokenAuth]
+// authentication tokens.
 //
 // # Pagination
 //
