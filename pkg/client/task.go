@@ -48,6 +48,17 @@ var taskStatusText = map[TaskStatus]string{
 var _ json.Marshaler = (*TaskStatus)(nil)
 var _ json.Unmarshaler = (*TaskStatus)(nil)
 
+// Terminal returns whether a task with the receiving status is finished
+// permanently.
+func (s TaskStatus) Terminal() bool {
+	switch s {
+	case TaskStatusUnspecified, TaskSuccess, TaskFailure, TaskRevoked:
+		return true
+	}
+
+	return false
+}
+
 func (s TaskStatus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(taskStatusText[s])
 }
@@ -74,6 +85,28 @@ func (s *TaskStatus) UnmarshalJSON(data []byte) error {
 	return fmt.Errorf("unrecognized task status %q", *str)
 }
 
+type TaskError struct {
+	TaskID  string
+	Status  TaskStatus
+	Message string
+}
+
+func (e *TaskError) Error() string {
+	var suffix string
+
+	if e.Message != "" {
+		suffix = ": " + e.Message
+	}
+
+	return fmt.Sprintf("task %q status is %s%s", e.TaskID, e.Status.String(), suffix)
+}
+
+func (e *TaskError) Is(other error) bool {
+	err, ok := other.(*TaskError)
+
+	return ok && e.TaskID == err.TaskID && e.Status == err.Status
+}
+
 type Task struct {
 	ID           int64      `json:"id"`
 	TaskID       string     `json:"task_id"`
@@ -84,6 +117,23 @@ type Task struct {
 	Status       TaskStatus `json:"status"`
 	Result       *string    `json:"result"`
 	Acknowledged bool       `json:"acknowledged"`
+}
+
+func (t *Task) statusError() error {
+	if t.Status == TaskSuccess {
+		return nil
+	}
+
+	err := &TaskError{
+		TaskID: t.TaskID,
+		Status: t.Status,
+	}
+
+	if t.Result != nil {
+		err.Message = *t.Result
+	}
+
+	return err
 }
 
 func (c *Client) ListTasks(ctx context.Context) ([]Task, *Response, error) {

@@ -112,6 +112,8 @@ func (t *destructiveTests) uploadDocument(ctx context.Context) error {
 		return err
 	}
 
+	t.logger.Printf("Upload document with a generated image")
+
 	result, _, err := t.client.UploadDocument(ctx,
 		bytes.NewReader(imgBytes),
 		&client.DocumentUploadOptions{
@@ -122,7 +124,13 @@ func (t *destructiveTests) uploadDocument(ctx context.Context) error {
 		return fmt.Errorf("uploading document failed: %w", err)
 	}
 
-	t.logger.Printf("Task ID from upload: %s", result.TaskID)
+	t.logger.Printf("Task ID from document upload: %s", result.TaskID)
+
+	if task, err := t.client.WaitForTask(ctx, result.TaskID, nil); err != nil {
+		return fmt.Errorf("document upload: %w", err)
+	} else {
+		t.logger.Printf("Task finished: %+v", task)
+	}
 
 	return nil
 }
