@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"image/color"
 )
 
 type Color struct {
@@ -11,6 +12,18 @@ type Color struct {
 
 var _ json.Marshaler = (*Color)(nil)
 var _ json.Unmarshaler = (*Color)(nil)
+var _ color.Color = (*Color)(nil)
+
+// NewColor converts any color implementing the [color.Color] interface.
+func NewColor(src color.Color) Color {
+	nrgb := color.NRGBAModel.Convert(src).(color.NRGBA)
+
+	return Color{
+		R: nrgb.R,
+		G: nrgb.G,
+		B: nrgb.B,
+	}
+}
 
 func (c Color) MarshalJSON() ([]byte, error) {
 	return json.Marshal(fmt.Sprintf("#%02x%02x%02x", c.R, c.G, c.B))
@@ -40,4 +53,16 @@ func (c *Color) UnmarshalJSON(data []byte) error {
 	}
 
 	return fmt.Errorf("unrecognized color format: %s", *str)
+}
+
+// RGBA implements [color.Color.RGBA].
+func (c Color) RGBA() (r, g, b, a uint32) {
+	r = uint32(c.R)
+	r |= r << 8
+	g = uint32(c.G)
+	g |= g << 8
+	b = uint32(c.B)
+	b |= b << 8
+	a = 0xFFFF
+	return
 }
