@@ -57,7 +57,7 @@ func TestGetDocumentMetadata(t *testing.T) {
 				transport: transport,
 			})
 
-			got, err := c.GetDocumentMetadata(context.Background(), tc.id)
+			got, _, err := c.GetDocumentMetadata(context.Background(), tc.id)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetDocumentMetadata() error diff (-want +got):\n%s", diff)

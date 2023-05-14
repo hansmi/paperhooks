@@ -164,7 +164,7 @@ func (t *readOnlyTests) documents(ctx context.Context) error {
 			return fmt.Errorf("getting document %d failed: %w", i.ID, err)
 		}
 
-		if md, err := t.client.GetDocumentMetadata(ctx, i.ID); err != nil {
+		if md, _, err := t.client.GetDocumentMetadata(ctx, i.ID); err != nil {
 			return fmt.Errorf("getting document %d metadata failed: %w", i.ID, err)
 		} else {
 			t.logger.Printf("Document %d metadata: %+v", i.ID, *md)

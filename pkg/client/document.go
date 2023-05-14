@@ -114,16 +114,16 @@ func (c *Client) DeleteDocument(ctx context.Context, id int64) (*Response, error
 	return crudDelete[Document](ctx, c.documentCrudOpts(), id)
 }
 
-func (c *Client) GetDocumentMetadata(ctx context.Context, id int64) (*DocumentMetadata, error) {
+func (c *Client) GetDocumentMetadata(ctx context.Context, id int64) (*DocumentMetadata, *Response, error) {
 	resp, err := c.newRequest(ctx).
 		SetResult(DocumentMetadata{}).
 		Get(fmt.Sprintf("api/documents/%d/metadata/", id))
 
 	if err := convertError(err, resp); err != nil {
-		return nil, err
+		return nil, wrapResponse(resp), err
 	}
 
-	return resp.Result().(*DocumentMetadata), nil
+	return resp.Result().(*DocumentMetadata), wrapResponse(resp), nil
 }
 
 type DocumentUploadOptions struct {
