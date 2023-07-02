@@ -10,6 +10,15 @@ import (
 	"github.com/google/go-querystring/query"
 )
 
+func defaultListOpts[T any](opts *T) *T {
+	if opts == nil {
+		var zero T
+		opts = &zero
+	}
+
+	return opts
+}
+
 type listResult[T any] struct {
 	// Total item count.
 	Count int64 `json:"count"`
@@ -28,7 +37,9 @@ type crudOptions struct {
 	base       string
 }
 
-func crudList[T any](ctx context.Context, opts crudOptions, listOpts any) ([]T, *Response, error) {
+func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts *O) ([]T, *Response, error) {
+	listOpts = defaultListOpts(listOpts)
+
 	req := opts.newRequest(ctx).SetResult(new(listResult[T]))
 
 	var pageNumber int
