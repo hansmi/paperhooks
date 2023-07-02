@@ -53,7 +53,7 @@ func TestListTags(t *testing.T) {
 			name: "options",
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
-					"ordering=name&name__istartswith=hello&page_size=25",
+					"ordering=name&name__istartswith=hello&page=1&page_size=25",
 					httpmock.NewStringResponder(http.StatusOK, `{
 						"results": [
 							{ "id": 400, "name": "four" },

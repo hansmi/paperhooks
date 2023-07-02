@@ -14,22 +14,36 @@ import (
 func TestPageTokenEncodeValues(t *testing.T) {
 	for _, tc := range []struct {
 		name       string
-		input      PageToken
+		input      *PageToken
 		wantValues url.Values
 		want       *PageToken
 	}{
 		{
 			name: "defaults",
 			wantValues: url.Values{
+				"page":      []string{"1"},
 				"page_size": []string{fmt.Sprint(defaultPerPage)},
 			},
 			want: &PageToken{
-				size: defaultPerPage,
+				number: 1,
+				size:   defaultPerPage,
+			},
+		},
+		{
+			name:  "zero",
+			input: &PageToken{},
+			wantValues: url.Values{
+				"page":      []string{"1"},
+				"page_size": []string{fmt.Sprint(defaultPerPage)},
+			},
+			want: &PageToken{
+				number: 1,
+				size:   defaultPerPage,
 			},
 		},
 		{
 			name: "custom values",
-			input: PageToken{
+			input: &PageToken{
 				number: 1,
 				size:   2,
 			},
@@ -46,7 +60,7 @@ func TestPageTokenEncodeValues(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			values, err := query.Values(struct {
 				T *PageToken
-			}{&tc.input})
+			}{tc.input})
 
 			if err != nil {
 				t.Errorf("Encoding values failed: %v", err)

@@ -20,17 +20,29 @@ type PageToken struct {
 
 var _ query.Encoder = (*PageToken)(nil)
 
-func (t *PageToken) EncodeValues(_ string, v *url.Values) error {
+func (t *PageToken) values() (int, int) {
+	number := 1
 	size := defaultPerPage
 
 	if t != nil {
+		// Zero is an invalid page number.
+		if t.number > 0 {
+			number = t.number
+		}
+
 		if t.size > 0 {
 			size = t.size
 		}
+	}
 
-		if t.number > 0 {
-			v.Set("page", strconv.FormatUint(uint64(t.number), 10))
-		}
+	return number, size
+}
+
+func (t *PageToken) EncodeValues(_ string, v *url.Values) error {
+	number, size := t.values()
+
+	if number > 0 {
+		v.Set("page", strconv.FormatUint(uint64(number), 10))
 	}
 
 	// The page size is always set in the URL to never rely on the server's
