@@ -12,10 +12,10 @@ const defaultPerPage = 25
 
 type PageToken struct {
 	// Page number for paginated result sets.
-	number int
+	number int `url:"-"`
 
 	// Number of items on paginated result sets.
-	size int
+	size int `url:"-"`
 }
 
 var _ query.Encoder = (*PageToken)(nil)
