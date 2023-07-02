@@ -18,6 +18,12 @@ func (c *Client) storagePathCrudOpts() crudOptions {
 	return crudOptions{
 		base:       "api/storage_paths/",
 		newRequest: c.newRequest,
+		getID: func(v any) int64 {
+			return v.(StoragePath).ID
+		},
+		setPage: func(opts any, page *PageToken) {
+			opts.(*ListStoragePathsOptions).Page = page
+		},
 	}
 }
 
@@ -31,6 +37,12 @@ type ListStoragePathsOptions struct {
 
 func (c *Client) ListStoragePaths(ctx context.Context, opts *ListStoragePathsOptions) ([]StoragePath, *Response, error) {
 	return crudList[StoragePath](ctx, c.storagePathCrudOpts(), opts)
+}
+
+// ListAllStoragePaths iterates over all storage paths matching the filters
+// specified in opts, invoking handler for each.
+func (c *Client) ListAllStoragePaths(ctx context.Context, opts *ListStoragePathsOptions, handler func(context.Context, StoragePath) error) error {
+	return crudListAll[StoragePath](ctx, c.storagePathCrudOpts(), opts, handler)
 }
 
 func (c *Client) GetStoragePath(ctx context.Context, id int64) (*StoragePath, *Response, error) {

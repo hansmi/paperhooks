@@ -18,6 +18,12 @@ func (c *Client) documentTypeCrudOpts() crudOptions {
 	return crudOptions{
 		base:       "api/document_types/",
 		newRequest: c.newRequest,
+		getID: func(v any) int64 {
+			return v.(DocumentType).ID
+		},
+		setPage: func(opts any, page *PageToken) {
+			opts.(*ListDocumentTypesOptions).Page = page
+		},
 	}
 }
 
@@ -30,6 +36,12 @@ type ListDocumentTypesOptions struct {
 
 func (c *Client) ListDocumentTypes(ctx context.Context, opts *ListDocumentTypesOptions) ([]DocumentType, *Response, error) {
 	return crudList[DocumentType](ctx, c.documentTypeCrudOpts(), opts)
+}
+
+// ListAllDocumentTypes iterates over all document types matching the filters
+// specified in opts, invoking handler for each.
+func (c *Client) ListAllDocumentTypes(ctx context.Context, opts *ListDocumentTypesOptions, handler func(context.Context, DocumentType) error) error {
+	return crudListAll[DocumentType](ctx, c.documentTypeCrudOpts(), opts, handler)
 }
 
 func (c *Client) GetDocumentType(ctx context.Context, id int64) (*DocumentType, *Response, error) {

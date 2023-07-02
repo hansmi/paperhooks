@@ -21,6 +21,12 @@ func (c *Client) tagCrudOpts() crudOptions {
 	return crudOptions{
 		base:       "api/tags/",
 		newRequest: c.newRequest,
+		getID: func(v any) int64 {
+			return v.(Tag).ID
+		},
+		setPage: func(opts any, page *PageToken) {
+			opts.(*ListTagsOptions).Page = page
+		},
 	}
 }
 
@@ -33,6 +39,12 @@ type ListTagsOptions struct {
 
 func (c *Client) ListTags(ctx context.Context, opts *ListTagsOptions) ([]Tag, *Response, error) {
 	return crudList[Tag](ctx, c.tagCrudOpts(), opts)
+}
+
+// ListAllTags iterates over all tags matching the filters specified in opts,
+// invoking handler for each.
+func (c *Client) ListAllTags(ctx context.Context, opts *ListTagsOptions, handler func(context.Context, Tag) error) error {
+	return crudListAll[Tag](ctx, c.tagCrudOpts(), opts, handler)
 }
 
 func (c *Client) GetTag(ctx context.Context, id int64) (*Tag, *Response, error) {

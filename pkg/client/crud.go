@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-resty/resty/v2"
 	"github.com/google/go-querystring/query"
+	"golang.org/x/sync/errgroup"
 )
 
 func defaultListOpts[T any](opts *T) *T {
@@ -35,6 +36,8 @@ type listResult[T any] struct {
 type crudOptions struct {
 	newRequest func(context.Context) *resty.Request
 	base       string
+	getID      func(any) int64
+	setPage    func(any, *PageToken)
 }
 
 func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts *O) ([]T, *Response, error) {
@@ -84,6 +87,60 @@ func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts *O) ([]T
 	}
 
 	return results.Items, w, nil
+}
+
+func crudListAll[T, O any](ctx context.Context, opts crudOptions, listOpts *O, handler func(context.Context, T) error) error {
+	listOpts = defaultListOpts(listOpts)
+
+	queue := make(chan []T, 2)
+
+	g, ctx := errgroup.WithContext(ctx)
+	g.Go(func() error {
+		defer close(queue)
+
+		for {
+			items, resp, err := crudList[T](ctx, opts, listOpts)
+			if err != nil {
+				return err
+			}
+
+			queue <- items
+
+			if resp == nil || resp.NextPage == nil {
+				break
+			}
+
+			opts.setPage(listOpts, resp.NextPage)
+		}
+
+		return nil
+	})
+
+	g.Go(func() error {
+		seen := map[int64]struct{}{}
+
+		for items := range queue {
+			for _, i := range items {
+				key := opts.getID(i)
+
+				if _, ok := seen[key]; ok {
+					// Duplicates may be returned when items are added,
+					// modified or deleted during iteration.
+					continue
+				}
+
+				seen[key] = struct{}{}
+
+				if err := handler(ctx, i); err != nil {
+					return err
+				}
+			}
+		}
+
+		return nil
+	})
+
+	return g.Wait()
 }
 
 func crudGet[T any](ctx context.Context, opts crudOptions, id int64) (*T, *Response, error) {

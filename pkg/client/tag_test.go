@@ -145,6 +145,82 @@ func TestListTags(t *testing.T) {
 	}
 }
 
+func TestListAllTags(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		setup   func(*testing.T, *httpmock.MockTransport)
+		opts    *ListTagsOptions
+		wantErr error
+		want    []Tag
+	}{
+		{
+			name: "empty",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/api/tags/",
+					httpmock.NewStringResponder(http.StatusOK, `{}`))
+			},
+		},
+		{
+			name: "three pages",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
+					"page=1&page_size=25",
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"next": "?page=2",
+						"results": [
+							{ "id": 10, "name": "first" },
+							{ "id": 20, "name": "second" }
+						]
+					}`))
+				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
+					"page=2&page_size=25",
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"next": "?page=3"
+					}`))
+				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
+					"page=3&page_size=25",
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"results": [
+							{ "id": 90, "name": "last" }
+						]
+					}`))
+			},
+			want: []Tag{
+				{ID: 10, Name: "first"},
+				{ID: 20, Name: "second"},
+				{ID: 90, Name: "last"},
+			},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			transport := newMockTransport(t)
+
+			tc.setup(t, transport)
+
+			c := New(Options{
+				transport: transport,
+			})
+
+			var got []Tag
+
+			err := c.ListAllTags(context.Background(), tc.opts, func(_ context.Context, v Tag) error {
+				got = append(got, v)
+				return nil
+			})
+
+			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
+				t.Errorf("ListTags() error diff (-want +got):\n%s", diff)
+			}
+
+			if err == nil {
+				if diff := cmp.Diff(tc.want, got, cmpopts.EquateEmpty()); diff != "" {
+					t.Errorf("ListAllTags() diff (-want +got):\n%s", diff)
+				}
+			}
+		})
+	}
+}
+
 func TestGetTag(t *testing.T) {
 	for _, tc := range []struct {
 		name      string

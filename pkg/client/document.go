@@ -79,6 +79,12 @@ func (c *Client) documentCrudOpts() crudOptions {
 	return crudOptions{
 		base:       "api/documents/",
 		newRequest: c.newRequest,
+		getID: func(v any) int64 {
+			return v.(Document).ID
+		},
+		setPage: func(opts any, page *PageToken) {
+			opts.(*ListDocumentsOptions).Page = page
+		},
 	}
 }
 
@@ -100,6 +106,12 @@ type ListDocumentsOptions struct {
 
 func (c *Client) ListDocuments(ctx context.Context, opts *ListDocumentsOptions) ([]Document, *Response, error) {
 	return crudList[Document](ctx, c.documentCrudOpts(), opts)
+}
+
+// ListAllDocuments iterates over all documents matching the filters specified
+// in opts, invoking handler for each.
+func (c *Client) ListAllDocuments(ctx context.Context, opts *ListDocumentsOptions, handler func(context.Context, Document) error) error {
+	return crudListAll[Document](ctx, c.documentCrudOpts(), opts, handler)
 }
 
 func (c *Client) GetDocument(ctx context.Context, id int64) (*Document, *Response, error) {
