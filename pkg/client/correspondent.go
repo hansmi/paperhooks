@@ -13,7 +13,7 @@ type Correspondent struct {
 	MatchingAlgorithm  MatchingAlgorithm `json:"matching_algorithm"`
 	IsInsensitive      bool              `json:"is_insensitive"`
 	DocumentCount      int64             `json:"document_count"`
-	LastCorrespondence time.Time         `json:"last_correspondence"`
+	LastCorrespondence *time.Time        `json:"last_correspondence"`
 }
 
 func (c *Client) correspondentCrudOpts() crudOptions {
