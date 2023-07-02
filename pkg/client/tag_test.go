@@ -74,6 +74,52 @@ func TestListTags(t *testing.T) {
 				{ID: 500, Name: "five"},
 			},
 		},
+		{
+			name: "third page",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
+					"page=3&page_size=25",
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"results": [
+							{ "id": 300, "name": "third" }
+						]
+					}`))
+			},
+			opts: &ListTagsOptions{
+				ListOptions: ListOptions{
+					Page: &PageToken{number: 3},
+				},
+			},
+			want: []Tag{
+				{ID: 300, Name: "third"},
+			},
+		},
+		{
+			name: "first page not found",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
+					"page=1&page_size=25",
+					httpmock.NewStringResponder(http.StatusNotFound, `{}`))
+			},
+			opts: &ListTagsOptions{},
+			wantErr: &RequestError{
+				StatusCode: http.StatusNotFound,
+				Message:    "{}",
+			},
+		},
+		{
+			name: "third page not found",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
+					"page=3&page_size=25",
+					httpmock.NewStringResponder(http.StatusNotFound, `{}`))
+			},
+			opts: &ListTagsOptions{
+				ListOptions: ListOptions{
+					Page: &PageToken{number: 3},
+				},
+			},
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			transport := newMockTransport(t)

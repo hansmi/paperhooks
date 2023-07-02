@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/google/go-querystring/query"
@@ -30,13 +31,30 @@ type crudOptions struct {
 func crudList[T any](ctx context.Context, opts crudOptions, listOpts any) ([]T, *Response, error) {
 	req := opts.newRequest(ctx).SetResult(new(listResult[T]))
 
+	var pageNumber int
+
 	if values, err := query.Values(listOpts); err != nil {
 		return nil, nil, err
 	} else {
 		req.SetQueryParamsFromValues(values)
+
+		// listOpts has a property with the page number. Getting its value
+		// directly would require reflection.
+		if page := values.Get("page"); page != "" {
+			if pageNumber, err = strconv.Atoi(page); err != nil {
+				return nil, nil, err
+			}
+		}
 	}
 
 	resp, err := req.Get(opts.base)
+
+	// Items modified or deleted during iteration can cause a received page
+	// number to become unavailable. Treat the situation as an empty result
+	// set.
+	if err == nil && resp.StatusCode() == http.StatusNotFound && pageNumber > 1 {
+		return nil, wrapResponse(resp), nil
+	}
 
 	if err := convertError(err, resp); err != nil {
 		return nil, wrapResponse(resp), err
