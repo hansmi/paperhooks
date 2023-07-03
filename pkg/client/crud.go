@@ -104,7 +104,11 @@ func crudListAll[T, O any](ctx context.Context, opts crudOptions, listOpts *O, h
 				return err
 			}
 
-			queue <- items
+			select {
+			case queue <- items:
+			case <-ctx.Done():
+				return ctx.Err()
+			}
 
 			if resp == nil || resp.NextPage == nil {
 				break
