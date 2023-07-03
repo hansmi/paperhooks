@@ -2,7 +2,10 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"strconv"
+	"sync/atomic"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -218,6 +221,59 @@ func TestListAllTags(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestListAllTagsHandlerCancelsContext(t *testing.T) {
+	var nextID atomic.Int64
+
+	transport := newMockTransport(t)
+	transport.RegisterResponder(http.MethodGet, "/api/tags/",
+		httpmock.Responder(func(req *http.Request) (*http.Response, error) {
+			var pageNumber int
+
+			if str := req.FormValue("page"); str != "" {
+				if value, err := strconv.Atoi(str); err != nil {
+					t.Error(err)
+					return nil, err
+				} else {
+					pageNumber = value
+				}
+			}
+
+			result := &listResult[Tag]{}
+			result.Next = fmt.Sprintf("?page=%d", pageNumber+1)
+
+			for idx := 0; idx < 5; idx++ {
+				result.Items = append(result.Items, Tag{
+					ID: nextID.Add(1),
+				})
+			}
+
+			return httpmock.NewJsonResponse(http.StatusOK, result)
+		}))
+
+	c := New(Options{
+		transport: transport,
+	})
+
+	ctx, cancel := context.WithCancel(context.Background())
+	t.Cleanup(cancel)
+
+	var count atomic.Int64
+
+	err := c.ListAllTags(ctx, &ListTagsOptions{}, func(_ context.Context, v Tag) error {
+		if count.Add(1) > 20 {
+			cancel()
+		}
+
+		return nil
+	})
+
+	wantErr := context.Canceled
+
+	if diff := cmp.Diff(wantErr, err, cmpopts.EquateErrors()); diff != "" {
+		t.Errorf("ListAllTags() error diff (-want +got):\n%s", diff)
 	}
 }
 
