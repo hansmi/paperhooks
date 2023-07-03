@@ -209,7 +209,7 @@ func TestListAllTags(t *testing.T) {
 			})
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
-				t.Errorf("ListTags() error diff (-want +got):\n%s", diff)
+				t.Errorf("ListAllTags() error diff (-want +got):\n%s", diff)
 			}
 
 			if err == nil {
