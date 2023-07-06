@@ -36,13 +36,13 @@ type ListCorrespondentsOptions struct {
 	Name     CharFilterSpec `url:"name"`
 }
 
-func (c *Client) ListCorrespondents(ctx context.Context, opts *ListCorrespondentsOptions) ([]Correspondent, *Response, error) {
+func (c *Client) ListCorrespondents(ctx context.Context, opts ListCorrespondentsOptions) ([]Correspondent, *Response, error) {
 	return crudList[Correspondent](ctx, c.correspondentCrudOpts(), opts)
 }
 
 // ListAllCorrespondents iterates over all correspondents matching the filters
 // specified in opts, invoking handler for each.
-func (c *Client) ListAllCorrespondents(ctx context.Context, opts *ListCorrespondentsOptions, handler func(context.Context, Correspondent) error) error {
+func (c *Client) ListAllCorrespondents(ctx context.Context, opts ListCorrespondentsOptions, handler func(context.Context, Correspondent) error) error {
 	return crudListAll[Correspondent](ctx, c.correspondentCrudOpts(), opts, handler)
 }
 

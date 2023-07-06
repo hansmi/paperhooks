@@ -78,11 +78,7 @@ func (w taskWaiter) wait(ctx context.Context) (*Task, error) {
 // WaitForTask polls the status of a task until it reaches a terminal status
 // (success, failure or revoked). Task failures are reported as an error of
 // type [TaskError].
-func (c *Client) WaitForTask(ctx context.Context, taskID string, opts *WaitForTaskOptions) (*Task, error) {
-	if opts == nil {
-		opts = &WaitForTaskOptions{}
-	}
-
+func (c *Client) WaitForTask(ctx context.Context, taskID string, opts WaitForTaskOptions) (*Task, error) {
 	w := taskWaiter{
 		logger: &prefixLogger{
 			wrapped: c.logger,

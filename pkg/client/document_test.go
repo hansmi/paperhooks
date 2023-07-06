@@ -135,7 +135,7 @@ func TestUploadDocument(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.UploadDocument(context.Background(), tc.r, &tc.opts)
+			got, _, err := c.UploadDocument(context.Background(), tc.r, tc.opts)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("UploadDocument() error diff (-want +got):\n%s", diff)

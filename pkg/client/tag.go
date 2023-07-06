@@ -37,13 +37,13 @@ type ListTagsOptions struct {
 	Name     CharFilterSpec `url:"name"`
 }
 
-func (c *Client) ListTags(ctx context.Context, opts *ListTagsOptions) ([]Tag, *Response, error) {
+func (c *Client) ListTags(ctx context.Context, opts ListTagsOptions) ([]Tag, *Response, error) {
 	return crudList[Tag](ctx, c.tagCrudOpts(), opts)
 }
 
 // ListAllTags iterates over all tags matching the filters specified in opts,
 // invoking handler for each.
-func (c *Client) ListAllTags(ctx context.Context, opts *ListTagsOptions, handler func(context.Context, Tag) error) error {
+func (c *Client) ListAllTags(ctx context.Context, opts ListTagsOptions, handler func(context.Context, Tag) error) error {
 	return crudListAll[Tag](ctx, c.tagCrudOpts(), opts, handler)
 }
 

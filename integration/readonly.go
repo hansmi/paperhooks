@@ -17,7 +17,7 @@ type readOnlyTests struct {
 }
 
 func (t *readOnlyTests) tags(ctx context.Context) error {
-	opt := &client.ListTagsOptions{}
+	opt := client.ListTagsOptions{}
 	all := []client.Tag{}
 
 	for {
@@ -47,7 +47,7 @@ func (t *readOnlyTests) tags(ctx context.Context) error {
 }
 
 func (t *readOnlyTests) correspondents(ctx context.Context) error {
-	opt := &client.ListCorrespondentsOptions{}
+	opt := client.ListCorrespondentsOptions{}
 	all := []client.Correspondent{}
 
 	for {
@@ -77,7 +77,7 @@ func (t *readOnlyTests) correspondents(ctx context.Context) error {
 }
 
 func (t *readOnlyTests) documentTypes(ctx context.Context) error {
-	opt := &client.ListDocumentTypesOptions{}
+	opt := client.ListDocumentTypesOptions{}
 	all := []client.DocumentType{}
 
 	for {
@@ -107,7 +107,7 @@ func (t *readOnlyTests) documentTypes(ctx context.Context) error {
 }
 
 func (t *readOnlyTests) storagePaths(ctx context.Context) error {
-	opt := &client.ListStoragePathsOptions{}
+	opt := client.ListStoragePathsOptions{}
 	all := []client.StoragePath{}
 
 	for {
@@ -139,7 +139,7 @@ func (t *readOnlyTests) storagePaths(ctx context.Context) error {
 func (t *readOnlyTests) documents(ctx context.Context) error {
 	const examineCount = 10
 
-	opt := &client.ListDocumentsOptions{}
+	opt := client.ListDocumentsOptions{}
 	all := []client.Document{}
 
 	for {

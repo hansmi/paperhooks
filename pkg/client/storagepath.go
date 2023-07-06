@@ -35,13 +35,13 @@ type ListStoragePathsOptions struct {
 	Path     CharFilterSpec `url:"path"`
 }
 
-func (c *Client) ListStoragePaths(ctx context.Context, opts *ListStoragePathsOptions) ([]StoragePath, *Response, error) {
+func (c *Client) ListStoragePaths(ctx context.Context, opts ListStoragePathsOptions) ([]StoragePath, *Response, error) {
 	return crudList[StoragePath](ctx, c.storagePathCrudOpts(), opts)
 }
 
 // ListAllStoragePaths iterates over all storage paths matching the filters
 // specified in opts, invoking handler for each.
-func (c *Client) ListAllStoragePaths(ctx context.Context, opts *ListStoragePathsOptions, handler func(context.Context, StoragePath) error) error {
+func (c *Client) ListAllStoragePaths(ctx context.Context, opts ListStoragePathsOptions, handler func(context.Context, StoragePath) error) error {
 	return crudListAll[StoragePath](ctx, c.storagePathCrudOpts(), opts, handler)
 }
 

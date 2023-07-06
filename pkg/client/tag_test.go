@@ -17,7 +17,7 @@ func TestListTags(t *testing.T) {
 	for _, tc := range []struct {
 		name    string
 		setup   func(*testing.T, *httpmock.MockTransport)
-		opts    *ListTagsOptions
+		opts    ListTagsOptions
 		wantErr error
 		want    []Tag
 	}{
@@ -64,7 +64,7 @@ func TestListTags(t *testing.T) {
 						]
 					}`))
 			},
-			opts: &ListTagsOptions{
+			opts: ListTagsOptions{
 				Ordering: OrderingSpec{
 					Field: "name",
 				},
@@ -88,7 +88,7 @@ func TestListTags(t *testing.T) {
 						]
 					}`))
 			},
-			opts: &ListTagsOptions{
+			opts: ListTagsOptions{
 				ListOptions: ListOptions{
 					Page: &PageToken{number: 3},
 				},
@@ -104,7 +104,6 @@ func TestListTags(t *testing.T) {
 					"page=1&page_size=25",
 					httpmock.NewStringResponder(http.StatusNotFound, `{}`))
 			},
-			opts: &ListTagsOptions{},
 			wantErr: &RequestError{
 				StatusCode: http.StatusNotFound,
 				Message:    "{}",
@@ -117,7 +116,7 @@ func TestListTags(t *testing.T) {
 					"page=3&page_size=25",
 					httpmock.NewStringResponder(http.StatusNotFound, `{}`))
 			},
-			opts: &ListTagsOptions{
+			opts: ListTagsOptions{
 				ListOptions: ListOptions{
 					Page: &PageToken{number: 3},
 				},
@@ -152,7 +151,7 @@ func TestListAllTags(t *testing.T) {
 	for _, tc := range []struct {
 		name    string
 		setup   func(*testing.T, *httpmock.MockTransport)
-		opts    *ListTagsOptions
+		opts    ListTagsOptions
 		wantErr error
 		want    []Tag
 	}{
@@ -262,7 +261,7 @@ func TestListAllTagsHandlerCancelsContext(t *testing.T) {
 
 	var count atomic.Int64
 
-	err := c.ListAllTags(ctx, &ListTagsOptions{}, func(_ context.Context, v Tag) error {
+	err := c.ListAllTags(ctx, ListTagsOptions{}, func(_ context.Context, v Tag) error {
 		if count.Add(1) > 20 {
 			cancel()
 		}

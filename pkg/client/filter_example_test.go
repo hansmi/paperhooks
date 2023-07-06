@@ -15,7 +15,7 @@ func Example_filter() {
 	opt.Path.StartsWithIgnoringCase = String("2019/")
 
 	for {
-		got, resp, err := cl.ListStoragePaths(context.Background(), &opt)
+		got, resp, err := cl.ListStoragePaths(context.Background(), opt)
 		if err != nil {
 			log.Fatalf("Listing storage paths failed: %v", err)
 		}

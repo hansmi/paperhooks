@@ -68,7 +68,7 @@ func (t *destructiveTests) tags(ctx context.Context) error {
 
 	t.logger.Printf("List tags with name %q", name)
 
-	if matches, _, err := t.client.ListTags(ctx, &client.ListTagsOptions{
+	if matches, _, err := t.client.ListTags(ctx, client.ListTagsOptions{
 		Ordering: client.OrderingSpec{
 			Field: "name",
 		},
@@ -116,7 +116,7 @@ func (t *destructiveTests) uploadDocument(ctx context.Context) error {
 
 	result, _, err := t.client.UploadDocument(ctx,
 		bytes.NewReader(imgBytes),
-		&client.DocumentUploadOptions{
+		client.DocumentUploadOptions{
 			Filename: t.mark + ".png",
 			Title:    t.mark,
 		})
@@ -126,7 +126,7 @@ func (t *destructiveTests) uploadDocument(ctx context.Context) error {
 
 	t.logger.Printf("Task ID from document upload: %s", result.TaskID)
 
-	if task, err := t.client.WaitForTask(ctx, result.TaskID, nil); err != nil {
+	if task, err := t.client.WaitForTask(ctx, result.TaskID, client.WaitForTaskOptions{}); err != nil {
 		return fmt.Errorf("document upload: %w", err)
 	} else {
 		t.logger.Printf("Task finished: %+v", task)

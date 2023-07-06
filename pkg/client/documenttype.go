@@ -34,13 +34,13 @@ type ListDocumentTypesOptions struct {
 	Name     CharFilterSpec `url:"name"`
 }
 
-func (c *Client) ListDocumentTypes(ctx context.Context, opts *ListDocumentTypesOptions) ([]DocumentType, *Response, error) {
+func (c *Client) ListDocumentTypes(ctx context.Context, opts ListDocumentTypesOptions) ([]DocumentType, *Response, error) {
 	return crudList[DocumentType](ctx, c.documentTypeCrudOpts(), opts)
 }
 
 // ListAllDocumentTypes iterates over all document types matching the filters
 // specified in opts, invoking handler for each.
-func (c *Client) ListAllDocumentTypes(ctx context.Context, opts *ListDocumentTypesOptions, handler func(context.Context, DocumentType) error) error {
+func (c *Client) ListAllDocumentTypes(ctx context.Context, opts ListDocumentTypesOptions, handler func(context.Context, DocumentType) error) error {
 	return crudListAll[DocumentType](ctx, c.documentTypeCrudOpts(), opts, handler)
 }
 

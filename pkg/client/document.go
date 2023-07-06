@@ -104,13 +104,13 @@ type ListDocumentsOptions struct {
 	StoragePath         ForeignKeyFilterSpec `url:"storage_path"`
 }
 
-func (c *Client) ListDocuments(ctx context.Context, opts *ListDocumentsOptions) ([]Document, *Response, error) {
+func (c *Client) ListDocuments(ctx context.Context, opts ListDocumentsOptions) ([]Document, *Response, error) {
 	return crudList[Document](ctx, c.documentCrudOpts(), opts)
 }
 
 // ListAllDocuments iterates over all documents matching the filters specified
 // in opts, invoking handler for each.
-func (c *Client) ListAllDocuments(ctx context.Context, opts *ListDocumentsOptions, handler func(context.Context, Document) error) error {
+func (c *Client) ListAllDocuments(ctx context.Context, opts ListDocumentsOptions, handler func(context.Context, Document) error) error {
 	return crudListAll[Document](ctx, c.documentCrudOpts(), opts, handler)
 }
 
@@ -168,7 +168,7 @@ type DocumentUpload struct {
 // consumption process was started successfully. No additional status
 // information about the consumption process is available immediately. Poll the
 // returned task ID to wait for the consumption.
-func (c *Client) UploadDocument(ctx context.Context, r io.Reader, opts *DocumentUploadOptions) (*DocumentUpload, *Response, error) {
+func (c *Client) UploadDocument(ctx context.Context, r io.Reader, opts DocumentUploadOptions) (*DocumentUpload, *Response, error) {
 	result := &DocumentUpload{}
 
 	req := c.newRequest(ctx).

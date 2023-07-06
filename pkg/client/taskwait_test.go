@@ -236,7 +236,7 @@ func TestWaitForTask(t *testing.T) {
 
 			tc.opts.MaxElapsedTime = time.Second
 
-			got, err := c.WaitForTask(context.Background(), tc.taskID, &tc.opts)
+			got, err := c.WaitForTask(context.Background(), tc.taskID, tc.opts)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("WaitForTask() error diff (-want +got):\n%s", diff)

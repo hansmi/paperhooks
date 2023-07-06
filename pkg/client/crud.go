@@ -11,15 +11,6 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func defaultListOpts[T any](opts *T) *T {
-	if opts == nil {
-		var zero T
-		opts = &zero
-	}
-
-	return opts
-}
-
 type listResult[T any] struct {
 	// Total item count.
 	Count int64 `json:"count"`
@@ -40,9 +31,7 @@ type crudOptions struct {
 	setPage    func(any, *PageToken)
 }
 
-func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts *O) ([]T, *Response, error) {
-	listOpts = defaultListOpts(listOpts)
-
+func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts O) ([]T, *Response, error) {
 	req := opts.newRequest(ctx).SetResult(new(listResult[T]))
 
 	var pageNumber int
@@ -89,9 +78,7 @@ func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts *O) ([]T
 	return results.Items, w, nil
 }
 
-func crudListAll[T, O any](ctx context.Context, opts crudOptions, listOpts *O, handler func(context.Context, T) error) error {
-	listOpts = defaultListOpts(listOpts)
-
+func crudListAll[T, O any](ctx context.Context, opts crudOptions, listOpts O, handler func(context.Context, T) error) error {
 	queue := make(chan []T, 2)
 
 	g, ctx := errgroup.WithContext(ctx)
@@ -114,7 +101,7 @@ func crudListAll[T, O any](ctx context.Context, opts crudOptions, listOpts *O, h
 				break
 			}
 
-			opts.setPage(listOpts, resp.NextPage)
+			opts.setPage(&listOpts, resp.NextPage)
 		}
 
 		return nil
