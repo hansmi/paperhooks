@@ -8,7 +8,7 @@ require (
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/go-cmp v0.5.9
 	github.com/google/go-querystring v1.1.0
-	github.com/jarcoal/httpmock v1.3.0
+	github.com/jarcoal/httpmock v1.3.1
 	github.com/kr/pretty v0.3.1
 	go.uber.org/multierr v1.11.0
 	golang.org/x/sync v0.3.0
