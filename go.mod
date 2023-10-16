@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/kingpin/v2 v2.3.2
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/go-resty/resty/v2 v2.9.1
-	github.com/google/go-cmp v0.5.9
+	github.com/google/go-cmp v0.6.0
 	github.com/google/go-querystring v1.1.0
 	github.com/jarcoal/httpmock v1.3.1
 	github.com/kr/pretty v0.3.1
