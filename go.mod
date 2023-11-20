@@ -3,7 +3,7 @@ module github.com/hansmi/paperhooks
 go 1.19
 
 require (
-	github.com/alecthomas/kingpin/v2 v2.3.2
+	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/go-resty/resty/v2 v2.10.0
 	github.com/google/go-cmp v0.6.0
