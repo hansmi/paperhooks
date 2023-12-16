@@ -136,6 +136,15 @@ func (t *readOnlyTests) storagePaths(ctx context.Context) error {
 	return nil
 }
 
+func (t *readOnlyTests) customFields(ctx context.Context) error {
+	var opt client.ListCustomFieldsOptions
+
+	return t.client.ListAllCustomFields(ctx, opt, func(ctx context.Context, field client.CustomField) error {
+		t.logger.Printf("Received custom field: %#v", field)
+		return nil
+	})
+}
+
 func (t *readOnlyTests) documents(ctx context.Context) error {
 	const examineCount = 10
 

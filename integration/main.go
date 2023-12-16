@@ -47,6 +47,7 @@ func main() {
 		ro.correspondents,
 		ro.documentTypes,
 		ro.storagePaths,
+		ro.customFields,
 		ro.documents,
 		ro.tasks,
 		ro.logs,

@@ -49,6 +49,9 @@ type Document struct {
 
 	// Verbose filename of the archived document. Read-only. Nil if no archived document is available.
 	ArchivedFileName *string `json:"archived_file_name"`
+
+	// Custom fields on the document.
+	CustomFields []CustomFieldInstance `json:"custom_fields"`
 }
 
 type DocumentVersionMetadata struct {
