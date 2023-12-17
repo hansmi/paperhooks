@@ -101,6 +101,19 @@ var tagModel = model{
 	},
 }
 
+var documentTypeModel = model{
+	name: "documentType",
+	fields: []modelField{
+		{name: "id", typ: "int64", readOnly: true},
+		{name: "slug", typ: "string", readOnly: true},
+		{name: "name", typ: "string"},
+		{name: "match", typ: "string"},
+		{name: "matching_algorithm", typ: "MatchingAlgorithm"},
+		{name: "is_insensitive", typ: "bool"},
+		{name: "document_count", typ: "int64", readOnly: true},
+	},
+}
+
 func main() {
 	outputFile := flag.String("output", "", "Destination file")
 
@@ -122,6 +135,7 @@ func main() {
 	}
 
 	models := []model{
+		documentTypeModel,
 		storagePathModel,
 		tagModel,
 	}

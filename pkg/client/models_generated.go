@@ -3,6 +3,46 @@ package client
 
 import "encoding/json"
 
+type DocumentType struct {
+	ID                int64             `json:"id"`
+	Slug              string            `json:"slug"`
+	Name              string            `json:"name"`
+	Match             string            `json:"match"`
+	MatchingAlgorithm MatchingAlgorithm `json:"matching_algorithm"`
+	IsInsensitive     bool              `json:"is_insensitive"`
+	DocumentCount     int64             `json:"document_count"`
+}
+
+type DocumentTypeFields struct {
+	objectFields
+}
+
+var _ json.Marshaler = (*DocumentTypeFields)(nil)
+
+func NewDocumentTypeFields() *DocumentTypeFields {
+	return &DocumentTypeFields{objectFields{}}
+}
+
+func (f *DocumentTypeFields) Name(name string) *DocumentTypeFields {
+	f.set("name", name)
+	return f
+}
+
+func (f *DocumentTypeFields) Match(match string) *DocumentTypeFields {
+	f.set("match", match)
+	return f
+}
+
+func (f *DocumentTypeFields) MatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *DocumentTypeFields {
+	f.set("matching_algorithm", matchingAlgorithm)
+	return f
+}
+
+func (f *DocumentTypeFields) IsInsensitive(isInsensitive bool) *DocumentTypeFields {
+	f.set("is_insensitive", isInsensitive)
+	return f
+}
+
 type StoragePath struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
