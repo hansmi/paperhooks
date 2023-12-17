@@ -475,6 +475,80 @@ func TestUpdateTag(t *testing.T) {
 	}
 }
 
+func TestPatchTag(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		setup   func(*testing.T, *httpmock.MockTransport)
+		id      int64
+		input   *TagFields
+		wantErr error
+		want    *Tag
+	}{
+		{
+			name: "empty",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodPatch, "/api/tags/4040/",
+					httpmock.NewStringResponder(http.StatusOK, `{}`))
+			},
+			id:    4040,
+			input: NewTagFields(),
+			want:  &Tag{},
+		},
+		{
+			name: "success",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterMatcherResponder(http.MethodPatch, "/api/tags/4616/",
+					httpmock.BodyContainsString(`"newname"`),
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"id": 16975,
+						"name": "blubb"
+					}`))
+			},
+			id:    4616,
+			input: NewTagFields().Name("newname"),
+			want: &Tag{
+				ID:   16975,
+				Name: "blubb",
+			},
+		},
+		{
+			name: "error",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodPatch, "/api/tags/16624/",
+					httpmock.NewStringResponder(http.StatusTeapot, `{}`))
+			},
+			id:    16624,
+			input: NewTagFields(),
+			wantErr: &RequestError{
+				StatusCode: http.StatusTeapot,
+				Message:    `{}`,
+			},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			transport := newMockTransport(t)
+
+			tc.setup(t, transport)
+
+			c := New(Options{
+				transport: transport,
+			})
+
+			got, _, err := c.PatchTag(context.Background(), tc.id, tc.input)
+
+			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
+				t.Errorf("PatchTag() error diff (-want +got):\n%s", diff)
+			}
+
+			if err == nil {
+				if diff := cmp.Diff(tc.want, got, cmpopts.EquateEmpty()); diff != "" {
+					t.Errorf("PatchTag() diff (-want +got):\n%s", diff)
+				}
+			}
+		})
+	}
+}
+
 func TestDeleteTag(t *testing.T) {
 	for _, tc := range []struct {
 		name    string

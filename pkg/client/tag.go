@@ -88,6 +88,10 @@ func (c *Client) UpdateTag(ctx context.Context, id int64, data *Tag) (*Tag, *Res
 	return crudUpdate[Tag](ctx, c.tagCrudOpts(), id, data)
 }
 
+func (c *Client) PatchTag(ctx context.Context, id int64, data *TagFields) (*Tag, *Response, error) {
+	return crudPatch[Tag](ctx, c.tagCrudOpts(), id, data)
+}
+
 func (c *Client) DeleteTag(ctx context.Context, id int64) (*Response, error) {
 	return crudDelete[Tag](ctx, c.tagCrudOpts(), id)
 }

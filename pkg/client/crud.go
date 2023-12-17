@@ -181,6 +181,19 @@ func crudUpdate[T any](ctx context.Context, opts crudOptions, id int64, data *T)
 	return resp.Result().(*T), wrapResponse(resp), nil
 }
 
+func crudPatch[T any](ctx context.Context, opts crudOptions, id int64, data any) (*T, *Response, error) {
+	resp, err := opts.newRequest(ctx).
+		SetResult(new(T)).
+		SetBody(data).
+		Patch(fmt.Sprintf("%s%d/", opts.base, id))
+
+	if err := convertError(err, resp); err != nil {
+		return nil, wrapResponse(resp), err
+	}
+
+	return resp.Result().(*T), wrapResponse(resp), nil
+}
+
 func crudDelete[T any](ctx context.Context, opts crudOptions, id int64) (*Response, error) {
 	resp, err := opts.newRequest(ctx).
 		Delete(fmt.Sprintf("%s%d/", opts.base, id))
