@@ -345,13 +345,13 @@ func TestCreateTag(t *testing.T) {
 	for _, tc := range []struct {
 		name    string
 		setup   func(*testing.T, *httpmock.MockTransport)
-		input   *Tag
+		input   *TagFields
 		wantErr error
 		want    *Tag
 	}{
 		{
 			name:  "empty",
-			input: &Tag{},
+			input: NewTagFields(),
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterResponder(http.MethodPost, "/api/tags/",
 					httpmock.NewStringResponder(http.StatusCreated, `{}`))
@@ -359,10 +359,8 @@ func TestCreateTag(t *testing.T) {
 			want: &Tag{},
 		},
 		{
-			name: "success",
-			input: &Tag{
-				Name: "foo",
-			},
+			name:  "success",
+			input: NewTagFields().Name("foo"),
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterMatcherResponder(http.MethodPost, "/api/tags/",
 					httpmock.BodyContainsString(`"foo"`),
@@ -378,7 +376,7 @@ func TestCreateTag(t *testing.T) {
 		},
 		{
 			name:  "unexpected HTTP 200",
-			input: &Tag{},
+			input: NewTagFields(),
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterResponder(http.MethodPost, "/api/tags/",
 					httpmock.NewStringResponder(http.StatusOK, `{}`))

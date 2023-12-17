@@ -146,10 +146,10 @@ func crudGet[T any](ctx context.Context, opts crudOptions, id int64) (*T, *Respo
 	return resp.Result().(*T), wrapResponse(resp), nil
 }
 
-func crudCreate[T any](ctx context.Context, opts crudOptions, data *T) (*T, *Response, error) {
+func crudCreate[T any](ctx context.Context, opts crudOptions, data any) (*T, *Response, error) {
 	resp, err := opts.newRequest(ctx).
 		SetResult(new(T)).
-		SetBody(*data).
+		SetBody(data).
 		Post(opts.base)
 
 	err = convertError(err, resp)

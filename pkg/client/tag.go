@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 )
 
 type Tag struct {
@@ -15,6 +16,33 @@ type Tag struct {
 	IsInsensitive     bool              `json:"is_insensitive"`
 	IsInboxTag        bool              `json:"is_inbox_tag"`
 	DocumentCount     int64             `json:"document_count"`
+}
+
+type TagFields struct {
+	objectFields
+}
+
+var _ json.Marshaler = (*TagFields)(nil)
+
+func NewTagFields() *TagFields {
+	return &TagFields{
+		objectFields: objectFields{},
+	}
+}
+
+func (f *TagFields) Name(name string) *TagFields {
+	f.set("name", name)
+	return f
+}
+
+func (f *TagFields) Color(c Color) *TagFields {
+	f.set("color", c)
+	return f
+}
+
+func (f *TagFields) TextColor(c Color) *TagFields {
+	f.set("text_color", c)
+	return f
 }
 
 func (c *Client) tagCrudOpts() crudOptions {
@@ -52,7 +80,7 @@ func (c *Client) GetTag(ctx context.Context, id int64) (*Tag, *Response, error) 
 	return crudGet[Tag](ctx, c.tagCrudOpts(), id)
 }
 
-func (c *Client) CreateTag(ctx context.Context, data *Tag) (*Tag, *Response, error) {
+func (c *Client) CreateTag(ctx context.Context, data *TagFields) (*Tag, *Response, error) {
 	return crudCreate[Tag](ctx, c.tagCrudOpts(), data)
 }
 

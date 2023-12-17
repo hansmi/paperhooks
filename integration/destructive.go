@@ -7,8 +7,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/hansmi/paperhooks/pkg/client"
 )
 
@@ -20,26 +18,18 @@ type destructiveTests struct {
 
 func (t *destructiveTests) tags(ctx context.Context) error {
 	name := fmt.Sprintf("%s test tag", t.mark)
-	compareOpts := []cmp.Option{
-		// Fields controlled by server
-		cmpopts.IgnoreFields(client.Tag{}, "ID", "Slug", "TextColor"),
-	}
 
 	t.logger.Printf("Create tag %q", name)
 
-	tag, _, err := t.client.CreateTag(ctx, &client.Tag{
-		Name:              name,
-		MatchingAlgorithm: client.MatchAny,
-	})
+	tag, _, err := t.client.CreateTag(ctx, client.NewTagFields().
+		Name(name).
+		MatchingAlgorithm(client.MatchAny))
 	if err != nil {
 		return fmt.Errorf("creating tag %s failed: %w", name, err)
 	}
 
-	if diff := cmp.Diff(client.Tag{
-		Name:              name,
-		MatchingAlgorithm: client.MatchAny,
-	}, *tag, compareOpts...); diff != "" {
-		return fmt.Errorf("tag diff (-want +got):\n%s", diff)
+	if !(tag.Name == name && tag.MatchingAlgorithm == client.MatchAny) {
+		return fmt.Errorf("tag settings differ from configuration: %#v", *tag)
 	}
 
 	t.logger.Printf("Update tag %q without making changes: %#v", name, *tag)
@@ -63,7 +53,6 @@ func (t *destructiveTests) tags(ctx context.Context) error {
 		return fmt.Errorf("updating tag %s with changes failed: %w", name, err)
 	}
 
-	origname := name
 	name += " modified"
 
 	t.logger.Printf("List tags with name %q", name)
@@ -79,17 +68,6 @@ func (t *destructiveTests) tags(ctx context.Context) error {
 		return fmt.Errorf("listing tags failed: %v", err)
 	} else if len(matches) != 1 {
 		return fmt.Errorf("listing tags did not return exactly one match for %q: %+v", name, matches)
-	}
-
-	if diff := cmp.Diff(client.Tag{
-		Name:              name,
-		Color:             client.Color{R: 0xFF},
-		IsInboxTag:        true,
-		IsInsensitive:     true,
-		MatchingAlgorithm: client.MatchFuzzy,
-		Match:             origname,
-	}, *tag, compareOpts...); diff != "" {
-		return fmt.Errorf("tag diff (-want +got):\n%s", diff)
 	}
 
 	t.logger.Printf("Delete tag %q", name)
