@@ -2,48 +2,7 @@ package client
 
 import (
 	"context"
-	"encoding/json"
 )
-
-type Tag struct {
-	ID                int64             `json:"id"`
-	Slug              string            `json:"slug"`
-	Name              string            `json:"name"`
-	Color             Color             `json:"color"`
-	TextColor         Color             `json:"text_color"`
-	Match             string            `json:"match"`
-	MatchingAlgorithm MatchingAlgorithm `json:"matching_algorithm"`
-	IsInsensitive     bool              `json:"is_insensitive"`
-	IsInboxTag        bool              `json:"is_inbox_tag"`
-	DocumentCount     int64             `json:"document_count"`
-}
-
-type TagFields struct {
-	objectFields
-}
-
-var _ json.Marshaler = (*TagFields)(nil)
-
-func NewTagFields() *TagFields {
-	return &TagFields{
-		objectFields: objectFields{},
-	}
-}
-
-func (f *TagFields) Name(name string) *TagFields {
-	f.set("name", name)
-	return f
-}
-
-func (f *TagFields) Color(c Color) *TagFields {
-	f.set("color", c)
-	return f
-}
-
-func (f *TagFields) TextColor(c Color) *TagFields {
-	f.set("text_color", c)
-	return f
-}
 
 func (c *Client) tagCrudOpts() crudOptions {
 	return crudOptions{
