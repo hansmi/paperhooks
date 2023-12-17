@@ -4,16 +4,6 @@ import (
 	"context"
 )
 
-type StoragePath struct {
-	ID                int64             `json:"id"`
-	Slug              string            `json:"slug"`
-	Name              string            `json:"name"`
-	Match             string            `json:"match"`
-	MatchingAlgorithm MatchingAlgorithm `json:"matching_algorithm"`
-	IsInsensitive     bool              `json:"is_insensitive"`
-	DocumentCount     int64             `json:"document_count"`
-}
-
 func (c *Client) storagePathCrudOpts() crudOptions {
 	return crudOptions{
 		base:       "api/storage_paths/",

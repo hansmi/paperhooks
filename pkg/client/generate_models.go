@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/iancoleman/strcase"
@@ -71,6 +72,19 @@ func (o model) write(w io.Writer) {
 	}
 }
 
+var storagePathModel = model{
+	name: "storagePath",
+	fields: []modelField{
+		{name: "id", typ: "int64", readOnly: true},
+		{name: "slug", typ: "string", readOnly: true},
+		{name: "name", typ: "string"},
+		{name: "match", typ: "string"},
+		{name: "matching_algorithm", typ: "MatchingAlgorithm"},
+		{name: "is_insensitive", typ: "bool"},
+		{name: "document_count", typ: "int64", readOnly: true},
+	},
+}
+
 var tagModel = model{
 	name: "tag",
 	fields: []modelField{
@@ -107,7 +121,18 @@ func main() {
 		fmt.Fprintf(&buf, "import %q\n", i)
 	}
 
-	tagModel.write(&buf)
+	models := []model{
+		storagePathModel,
+		tagModel,
+	}
+
+	sort.Slice(models, func(a, b int) bool {
+		return models[a].name < models[b].name
+	})
+
+	for _, i := range models {
+		i.write(&buf)
+	}
 
 	formatted, err := format.Source(buf.Bytes())
 	if err != nil {
