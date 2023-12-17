@@ -72,6 +72,20 @@ func (o model) write(w io.Writer) {
 	}
 }
 
+var correspondentModel = model{
+	name: "correspondent",
+	fields: []modelField{
+		{name: "id", typ: "int64", readOnly: true},
+		{name: "slug", typ: "string", readOnly: true},
+		{name: "name", typ: "string"},
+		{name: "match", typ: "string"},
+		{name: "matching_algorithm", typ: "MatchingAlgorithm"},
+		{name: "is_insensitive", typ: "bool"},
+		{name: "document_count", typ: "int64", readOnly: true},
+		{name: "last_correspondence", typ: "*time.Time", readOnly: true},
+	},
+}
+
 var storagePathModel = model{
 	name: "storagePath",
 	fields: []modelField{
@@ -130,11 +144,19 @@ func main() {
 		strings.Join(append([]string{filepath.Base(exe)}, os.Args[1:]...), " "))
 	buf.WriteString("package client\n")
 
-	for _, i := range []string{"encoding/json"} {
+	imports := []string{
+		"encoding/json",
+		"time",
+	}
+
+	sort.Strings(imports)
+
+	for _, i := range imports {
 		fmt.Fprintf(&buf, "import %q\n", i)
 	}
 
 	models := []model{
+		correspondentModel,
 		documentTypeModel,
 		storagePathModel,
 		tagModel,

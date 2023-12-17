@@ -2,19 +2,7 @@ package client
 
 import (
 	"context"
-	"time"
 )
-
-type Correspondent struct {
-	ID                 int64             `json:"id"`
-	Slug               string            `json:"slug"`
-	Name               string            `json:"name"`
-	Match              string            `json:"match"`
-	MatchingAlgorithm  MatchingAlgorithm `json:"matching_algorithm"`
-	IsInsensitive      bool              `json:"is_insensitive"`
-	DocumentCount      int64             `json:"document_count"`
-	LastCorrespondence *time.Time        `json:"last_correspondence"`
-}
 
 func (c *Client) correspondentCrudOpts() crudOptions {
 	return crudOptions{

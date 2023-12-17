@@ -2,6 +2,48 @@
 package client
 
 import "encoding/json"
+import "time"
+
+type Correspondent struct {
+	ID                 int64             `json:"id"`
+	Slug               string            `json:"slug"`
+	Name               string            `json:"name"`
+	Match              string            `json:"match"`
+	MatchingAlgorithm  MatchingAlgorithm `json:"matching_algorithm"`
+	IsInsensitive      bool              `json:"is_insensitive"`
+	DocumentCount      int64             `json:"document_count"`
+	LastCorrespondence *time.Time        `json:"last_correspondence"`
+}
+
+type CorrespondentFields struct {
+	objectFields
+}
+
+var _ json.Marshaler = (*CorrespondentFields)(nil)
+
+func NewCorrespondentFields() *CorrespondentFields {
+	return &CorrespondentFields{objectFields{}}
+}
+
+func (f *CorrespondentFields) Name(name string) *CorrespondentFields {
+	f.set("name", name)
+	return f
+}
+
+func (f *CorrespondentFields) Match(match string) *CorrespondentFields {
+	f.set("match", match)
+	return f
+}
+
+func (f *CorrespondentFields) MatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *CorrespondentFields {
+	f.set("matching_algorithm", matchingAlgorithm)
+	return f
+}
+
+func (f *CorrespondentFields) IsInsensitive(isInsensitive bool) *CorrespondentFields {
+	f.set("is_insensitive", isInsensitive)
+	return f
+}
 
 type DocumentType struct {
 	ID                int64             `json:"id"`
