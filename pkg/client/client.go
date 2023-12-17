@@ -110,5 +110,9 @@ type Response struct {
 }
 
 func wrapResponse(r *resty.Response) *Response {
+	if r == nil {
+		return nil
+	}
+
 	return &Response{Response: r.RawResponse}
 }

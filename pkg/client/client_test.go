@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/jarcoal/httpmock"
@@ -101,6 +102,25 @@ func TestClient(t *testing.T) {
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("Ping() error diff (-want +got):\n%s", diff)
 			}
+		})
+	}
+}
+
+func TestWrapResponse(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		resp *resty.Response
+	}{
+		{
+			name: "nil",
+		},
+		{
+			name: "response",
+			resp: &resty.Response{},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			wrapResponse(tc.resp)
 		})
 	}
 }
