@@ -95,6 +95,7 @@ type ListDocumentsOptions struct {
 	ListOptions
 
 	Ordering            OrderingSpec         `url:"ordering"`
+	Owner               IntFilterSpec        `url:"owner"`
 	Title               CharFilterSpec       `url:"title"`
 	Content             CharFilterSpec       `url:"content"`
 	ArchiveSerialNumber IntFilterSpec        `url:"archive_serial_number"`

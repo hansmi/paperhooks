@@ -31,6 +31,7 @@ type ListDocumentTypesOptions struct {
 	ListOptions
 
 	Ordering OrderingSpec   `url:"ordering"`
+	Owner    IntFilterSpec  `url:"owner"`
 	Name     CharFilterSpec `url:"name"`
 }
 
