@@ -35,12 +35,16 @@ func (c *Client) GetCustomField(ctx context.Context, id int64) (*CustomField, *R
 	return crudGet[CustomField](ctx, c.customFieldCrudOpts(), id)
 }
 
-func (c *Client) CreateCustomField(ctx context.Context, data *CustomField) (*CustomField, *Response, error) {
+func (c *Client) CreateCustomField(ctx context.Context, data *CustomFieldFields) (*CustomField, *Response, error) {
 	return crudCreate[CustomField](ctx, c.customFieldCrudOpts(), data)
 }
 
 func (c *Client) UpdateCustomField(ctx context.Context, id int64, data *CustomField) (*CustomField, *Response, error) {
 	return crudUpdate[CustomField](ctx, c.customFieldCrudOpts(), id, data)
+}
+
+func (c *Client) PatchCustomField(ctx context.Context, id int64, data *CustomFieldFields) (*CustomField, *Response, error) {
+	return crudPatch[CustomField](ctx, c.customFieldCrudOpts(), id, data)
 }
 
 func (c *Client) DeleteCustomField(ctx context.Context, id int64) (*Response, error) {
