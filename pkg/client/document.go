@@ -82,6 +82,10 @@ func (c *Client) UpdateDocument(ctx context.Context, id int64, data *Document) (
 	return crudUpdate[Document](ctx, c.documentCrudOpts(), id, data)
 }
 
+func (c *Client) PatchDocument(ctx context.Context, id int64, data *DocumentFields) (*Document, *Response, error) {
+	return crudPatch[Document](ctx, c.documentCrudOpts(), id, data)
+}
+
 func (c *Client) DeleteDocument(ctx context.Context, id int64) (*Response, error) {
 	return crudDelete[Document](ctx, c.documentCrudOpts(), id)
 }
