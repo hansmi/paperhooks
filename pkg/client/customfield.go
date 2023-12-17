@@ -4,12 +4,6 @@ import (
 	"context"
 )
 
-type CustomField struct {
-	ID       int64  `json:"id"`
-	Name     string `json:"name"`
-	DataType string `json:"data_type"`
-}
-
 func (c *Client) customFieldCrudOpts() crudOptions {
 	return crudOptions{
 		base:       "api/custom_fields/",

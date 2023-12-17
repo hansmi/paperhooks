@@ -86,6 +86,15 @@ var correspondentModel = model{
 	},
 }
 
+var customFieldModel = model{
+	name: "customField",
+	fields: []modelField{
+		{name: "id", typ: "int64", readOnly: true},
+		{name: "name", typ: "string"},
+		{name: "data_type", typ: "string"},
+	},
+}
+
 var storagePathModel = model{
 	name: "storagePath",
 	fields: []modelField{
@@ -157,6 +166,7 @@ func main() {
 
 	models := []model{
 		correspondentModel,
+		customFieldModel,
 		documentTypeModel,
 		storagePathModel,
 		tagModel,

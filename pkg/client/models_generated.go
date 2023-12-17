@@ -45,6 +45,32 @@ func (f *CorrespondentFields) IsInsensitive(isInsensitive bool) *CorrespondentFi
 	return f
 }
 
+type CustomField struct {
+	ID       int64  `json:"id"`
+	Name     string `json:"name"`
+	DataType string `json:"data_type"`
+}
+
+type CustomFieldFields struct {
+	objectFields
+}
+
+var _ json.Marshaler = (*CustomFieldFields)(nil)
+
+func NewCustomFieldFields() *CustomFieldFields {
+	return &CustomFieldFields{objectFields{}}
+}
+
+func (f *CustomFieldFields) Name(name string) *CustomFieldFields {
+	f.set("name", name)
+	return f
+}
+
+func (f *CustomFieldFields) DataType(dataType string) *CustomFieldFields {
+	f.set("data_type", dataType)
+	return f
+}
+
 type DocumentType struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
