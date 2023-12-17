@@ -39,12 +39,16 @@ func (c *Client) GetCorrespondent(ctx context.Context, id int64) (*Correspondent
 	return crudGet[Correspondent](ctx, c.correspondentCrudOpts(), id)
 }
 
-func (c *Client) CreateCorrespondent(ctx context.Context, data *Correspondent) (*Correspondent, *Response, error) {
+func (c *Client) CreateCorrespondent(ctx context.Context, data *CorrespondentFields) (*Correspondent, *Response, error) {
 	return crudCreate[Correspondent](ctx, c.correspondentCrudOpts(), data)
 }
 
 func (c *Client) UpdateCorrespondent(ctx context.Context, id int64, data *Correspondent) (*Correspondent, *Response, error) {
 	return crudUpdate[Correspondent](ctx, c.correspondentCrudOpts(), id, data)
+}
+
+func (c *Client) PatchCorrespondent(ctx context.Context, id int64, data *CorrespondentFields) (*Correspondent, *Response, error) {
+	return crudPatch[Correspondent](ctx, c.correspondentCrudOpts(), id, data)
 }
 
 func (c *Client) DeleteCorrespondent(ctx context.Context, id int64) (*Response, error) {
