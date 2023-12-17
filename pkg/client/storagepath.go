@@ -40,12 +40,16 @@ func (c *Client) GetStoragePath(ctx context.Context, id int64) (*StoragePath, *R
 	return crudGet[StoragePath](ctx, c.storagePathCrudOpts(), id)
 }
 
-func (c *Client) CreateStoragePath(ctx context.Context, data *StoragePath) (*StoragePath, *Response, error) {
+func (c *Client) CreateStoragePath(ctx context.Context, data *StoragePathFields) (*StoragePath, *Response, error) {
 	return crudCreate[StoragePath](ctx, c.storagePathCrudOpts(), data)
 }
 
 func (c *Client) UpdateStoragePath(ctx context.Context, id int64, data *StoragePath) (*StoragePath, *Response, error) {
 	return crudUpdate[StoragePath](ctx, c.storagePathCrudOpts(), id, data)
+}
+
+func (c *Client) PatchStoragePath(ctx context.Context, id int64, data *StoragePathFields) (*StoragePath, *Response, error) {
+	return crudPatch[StoragePath](ctx, c.storagePathCrudOpts(), id, data)
 }
 
 func (c *Client) DeleteStoragePath(ctx context.Context, id int64) (*Response, error) {
