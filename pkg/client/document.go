@@ -10,50 +10,6 @@ import (
 	"github.com/google/go-querystring/query"
 )
 
-type Document struct {
-	// ID of the document. Read-only.
-	ID int64 `json:"id"`
-
-	// Title of the document.
-	Title string `json:"title"`
-
-	// Plain-text content of the document.
-	Content string `json:"content"`
-
-	// List of tag IDs assigned to this document, or empty list.
-	Tags []int64 `json:"tags"`
-
-	// Document type of this document, or nil.
-	DocumentType *int64 `json:"document_type"`
-
-	// Correspondent of this document or nil.
-	Correspondent *int64 `json:"correspondent"`
-
-	// Storage path of this document or nil.
-	StoragePath *int64 `json:"storage_path"`
-
-	// The date time at which this document was created.
-	Created time.Time `json:"created"`
-
-	// The date at which this document was last edited in paperless. Read-only.
-	Modified time.Time `json:"modified"`
-
-	// The date at which this document was added to paperless. Read-only.
-	Added time.Time `json:"added"`
-
-	// The identifier of this document in a physical document archive.
-	ArchiveSerialNumber *int64 `json:"archive_serial_number"`
-
-	// Verbose filename of the original document. Read-only.
-	OriginalFileName string `json:"original_file_name"`
-
-	// Verbose filename of the archived document. Read-only. Nil if no archived document is available.
-	ArchivedFileName *string `json:"archived_file_name"`
-
-	// Custom fields on the document.
-	CustomFields []CustomFieldInstance `json:"custom_fields"`
-}
-
 type DocumentVersionMetadata struct {
 	Namespace string `json:"namespace"`
 	Prefix    string `json:"prefix"`

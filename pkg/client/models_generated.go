@@ -71,6 +71,105 @@ func (f *CustomFieldFields) DataType(dataType string) *CustomFieldFields {
 	return f
 }
 
+type Document struct {
+	// ID of the document.
+	ID int64 `json:"id"`
+
+	// Title of the document.
+	Title string `json:"title"`
+
+	// Plain-text content of the document.
+	Content string `json:"content"`
+
+	// List of tag IDs assigned to this document, or empty list.
+	Tags []int64 `json:"tags"`
+
+	// Document type of this document or nil.
+	DocumentType *int64 `json:"document_type"`
+
+	// Correspondent of this document or nil.
+	Correspondent *int64 `json:"correspondent"`
+
+	// Storage path of this document or nil.
+	StoragePath *int64 `json:"storage_path"`
+
+	// The date time at which this document was created.
+	Created time.Time `json:"created"`
+
+	// The date at which this document was last edited in paperless.
+	Modified time.Time `json:"modified"`
+
+	// The date at which this document was added to paperless.
+	Added time.Time `json:"added"`
+
+	// The identifier of this document in a physical document archive.
+	ArchiveSerialNumber *int64 `json:"archive_serial_number"`
+
+	// Verbose filename of the original document.
+	OriginalFileName string `json:"original_file_name"`
+
+	// Verbose filename of the archived document. Nil if no archived document is available.
+	ArchivedFileName *string `json:"archived_file_name"`
+
+	// Custom fields on the document.
+	CustomFields []CustomFieldInstance `json:"custom_fields"`
+}
+
+type DocumentFields struct {
+	objectFields
+}
+
+var _ json.Marshaler = (*DocumentFields)(nil)
+
+func NewDocumentFields() *DocumentFields {
+	return &DocumentFields{objectFields{}}
+}
+
+func (f *DocumentFields) Title(title string) *DocumentFields {
+	f.set("title", title)
+	return f
+}
+
+func (f *DocumentFields) Content(content string) *DocumentFields {
+	f.set("content", content)
+	return f
+}
+
+func (f *DocumentFields) Tags(tags []int64) *DocumentFields {
+	f.set("tags", tags)
+	return f
+}
+
+func (f *DocumentFields) DocumentType(documentType *int64) *DocumentFields {
+	f.set("document_type", documentType)
+	return f
+}
+
+func (f *DocumentFields) Correspondent(correspondent *int64) *DocumentFields {
+	f.set("correspondent", correspondent)
+	return f
+}
+
+func (f *DocumentFields) StoragePath(storagePath *int64) *DocumentFields {
+	f.set("storage_path", storagePath)
+	return f
+}
+
+func (f *DocumentFields) Created(created time.Time) *DocumentFields {
+	f.set("created", created)
+	return f
+}
+
+func (f *DocumentFields) ArchiveSerialNumber(archiveSerialNumber *int64) *DocumentFields {
+	f.set("archive_serial_number", archiveSerialNumber)
+	return f
+}
+
+func (f *DocumentFields) CustomFields(customFields []CustomFieldInstance) *DocumentFields {
+	f.set("custom_fields", customFields)
+	return f
+}
+
 type DocumentType struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`

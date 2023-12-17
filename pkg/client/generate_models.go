@@ -20,6 +20,7 @@ import (
 type modelField struct {
 	name     string
 	typ      string
+	comment  string
 	readOnly bool
 }
 
@@ -31,12 +32,19 @@ type model struct {
 func (o model) write(w io.Writer) {
 	fmt.Fprintf(w, "type %s struct {\n", strcase.ToCamel(o.name))
 
-	for _, f := range o.fields {
+	for idx, f := range o.fields {
 		name := strcase.ToCamel(f.name)
 
 		switch f.name {
 		case "id":
 			name = "ID"
+		}
+
+		if f.comment != "" {
+			if idx > 0 {
+				fmt.Fprintf(w, "\n")
+			}
+			fmt.Fprintf(w, "  // %s\n", f.comment)
 		}
 
 		fmt.Fprintf(w, "  %s %s `json:%q`\n", name, f.typ, f.name)
@@ -92,6 +100,26 @@ var customFieldModel = model{
 		{name: "id", typ: "int64", readOnly: true},
 		{name: "name", typ: "string"},
 		{name: "data_type", typ: "string"},
+	},
+}
+
+var documentModel = model{
+	name: "document",
+	fields: []modelField{
+		{name: "id", typ: "int64", comment: "ID of the document.", readOnly: true},
+		{name: "title", typ: "string", comment: "Title of the document."},
+		{name: "content", typ: "string", comment: "Plain-text content of the document."},
+		{name: "tags", typ: "[]int64", comment: "List of tag IDs assigned to this document, or empty list."},
+		{name: "document_type", typ: "*int64", comment: "Document type of this document or nil."},
+		{name: "correspondent", typ: "*int64", comment: "Correspondent of this document or nil."},
+		{name: "storage_path", typ: "*int64", comment: "Storage path of this document or nil."},
+		{name: "created", typ: "time.Time", comment: "The date time at which this document was created."},
+		{name: "modified", typ: "time.Time", comment: "The date at which this document was last edited in paperless.", readOnly: true},
+		{name: "added", typ: "time.Time", comment: "The date at which this document was added to paperless.", readOnly: true},
+		{name: "archive_serial_number", typ: "*int64", comment: "The identifier of this document in a physical document archive."},
+		{name: "original_file_name", typ: "string", comment: "Verbose filename of the original document.", readOnly: true},
+		{name: "archived_file_name", typ: "*string", comment: "Verbose filename of the archived document. Nil if no archived document is available.", readOnly: true},
+		{name: "custom_fields", typ: "[]CustomFieldInstance", comment: "Custom fields on the document."},
 	},
 }
 
@@ -167,6 +195,7 @@ func main() {
 	models := []model{
 		correspondentModel,
 		customFieldModel,
+		documentModel,
 		documentTypeModel,
 		storagePathModel,
 		tagModel,
