@@ -13,6 +13,20 @@ import (
 	"github.com/jarcoal/httpmock"
 )
 
+func TestTagFieldsAsMap(t *testing.T) {
+	f := NewTagFields()
+	f = f.Name("test").IsInboxTag(true)
+
+	want := map[string]any{
+		"name":         "test",
+		"is_inbox_tag": true,
+	}
+
+	if diff := cmp.Diff(want, f.AsMap(), cmpopts.EquateEmpty()); diff != "" {
+		t.Errorf("AsMap() diff (-want +got):\n%s", diff)
+	}
+}
+
 func TestListTags(t *testing.T) {
 	for _, tc := range []struct {
 		name    string

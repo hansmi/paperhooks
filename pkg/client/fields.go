@@ -1,11 +1,20 @@
 package client
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"golang.org/x/exp/maps"
+)
 
 type objectFields map[string]any
 
 func (f objectFields) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]any(f))
+}
+
+// AsMap returns a map from object field name to value.
+func (f objectFields) AsMap() map[string]any {
+	return maps.Clone(f)
 }
 
 func (f objectFields) set(name string, value any) {
