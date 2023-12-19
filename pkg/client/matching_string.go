@@ -8,7 +8,7 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[MatchUnspecified-0]
+	_ = x[MatchNone-0]
 	_ = x[MatchAny-1]
 	_ = x[MatchAll-2]
 	_ = x[MatchLiteral-3]
@@ -17,9 +17,9 @@ func _() {
 	_ = x[MatchAuto-6]
 }
 
-const _MatchingAlgorithm_name = "MatchUnspecifiedMatchAnyMatchAllMatchLiteralMatchRegexMatchFuzzyMatchAuto"
+const _MatchingAlgorithm_name = "MatchNoneMatchAnyMatchAllMatchLiteralMatchRegexMatchFuzzyMatchAuto"
 
-var _MatchingAlgorithm_index = [...]uint8{0, 16, 24, 32, 44, 54, 64, 73}
+var _MatchingAlgorithm_index = [...]uint8{0, 9, 17, 25, 37, 47, 57, 66}
 
 func (i MatchingAlgorithm) String() string {
 	if i < 0 || i >= MatchingAlgorithm(len(_MatchingAlgorithm_index)-1) {

@@ -4,7 +4,8 @@ package client
 type MatchingAlgorithm int
 
 const (
-	MatchUnspecified MatchingAlgorithm = iota
+	// None.
+	MatchNone MatchingAlgorithm = iota
 
 	// Any word.
 	MatchAny
