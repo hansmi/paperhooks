@@ -13,6 +13,9 @@ type Correspondent struct {
 	IsInsensitive      bool              `json:"is_insensitive"`
 	DocumentCount      int64             `json:"document_count"`
 	LastCorrespondence *time.Time        `json:"last_correspondence"`
+
+	// Object owner; objects without owner can be viewed and edited by all users.
+	Owner *int64 `json:"owner"`
 }
 
 type CorrespondentFields struct {
@@ -45,10 +48,18 @@ func (f *CorrespondentFields) IsInsensitive(isInsensitive bool) *CorrespondentFi
 	return f
 }
 
+func (f *CorrespondentFields) Owner(owner *int64) *CorrespondentFields {
+	f.set("owner", owner)
+	return f
+}
+
 type CustomField struct {
 	ID       int64  `json:"id"`
 	Name     string `json:"name"`
 	DataType string `json:"data_type"`
+
+	// Object owner; objects without owner can be viewed and edited by all users.
+	Owner *int64 `json:"owner"`
 }
 
 type CustomFieldFields struct {
@@ -68,6 +79,11 @@ func (f *CustomFieldFields) Name(name string) *CustomFieldFields {
 
 func (f *CustomFieldFields) DataType(dataType string) *CustomFieldFields {
 	f.set("data_type", dataType)
+	return f
+}
+
+func (f *CustomFieldFields) Owner(owner *int64) *CustomFieldFields {
+	f.set("owner", owner)
 	return f
 }
 
@@ -113,6 +129,9 @@ type Document struct {
 
 	// Custom fields on the document.
 	CustomFields []CustomFieldInstance `json:"custom_fields"`
+
+	// Object owner; objects without owner can be viewed and edited by all users.
+	Owner *int64 `json:"owner"`
 }
 
 type DocumentFields struct {
@@ -170,6 +189,11 @@ func (f *DocumentFields) CustomFields(customFields []CustomFieldInstance) *Docum
 	return f
 }
 
+func (f *DocumentFields) Owner(owner *int64) *DocumentFields {
+	f.set("owner", owner)
+	return f
+}
+
 type DocumentType struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
@@ -178,6 +202,9 @@ type DocumentType struct {
 	MatchingAlgorithm MatchingAlgorithm `json:"matching_algorithm"`
 	IsInsensitive     bool              `json:"is_insensitive"`
 	DocumentCount     int64             `json:"document_count"`
+
+	// Object owner; objects without owner can be viewed and edited by all users.
+	Owner *int64 `json:"owner"`
 }
 
 type DocumentTypeFields struct {
@@ -210,6 +237,11 @@ func (f *DocumentTypeFields) IsInsensitive(isInsensitive bool) *DocumentTypeFiel
 	return f
 }
 
+func (f *DocumentTypeFields) Owner(owner *int64) *DocumentTypeFields {
+	f.set("owner", owner)
+	return f
+}
+
 type StoragePath struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
@@ -218,6 +250,9 @@ type StoragePath struct {
 	MatchingAlgorithm MatchingAlgorithm `json:"matching_algorithm"`
 	IsInsensitive     bool              `json:"is_insensitive"`
 	DocumentCount     int64             `json:"document_count"`
+
+	// Object owner; objects without owner can be viewed and edited by all users.
+	Owner *int64 `json:"owner"`
 }
 
 type StoragePathFields struct {
@@ -250,6 +285,11 @@ func (f *StoragePathFields) IsInsensitive(isInsensitive bool) *StoragePathFields
 	return f
 }
 
+func (f *StoragePathFields) Owner(owner *int64) *StoragePathFields {
+	f.set("owner", owner)
+	return f
+}
+
 type Tag struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
@@ -261,6 +301,9 @@ type Tag struct {
 	IsInsensitive     bool              `json:"is_insensitive"`
 	IsInboxTag        bool              `json:"is_inbox_tag"`
 	DocumentCount     int64             `json:"document_count"`
+
+	// Object owner; objects without owner can be viewed and edited by all users.
+	Owner *int64 `json:"owner"`
 }
 
 type TagFields struct {
@@ -305,5 +348,10 @@ func (f *TagFields) IsInsensitive(isInsensitive bool) *TagFields {
 
 func (f *TagFields) IsInboxTag(isInboxTag bool) *TagFields {
 	f.set("is_inbox_tag", isInboxTag)
+	return f
+}
+
+func (f *TagFields) Owner(owner *int64) *TagFields {
+	f.set("owner", owner)
 	return f
 }

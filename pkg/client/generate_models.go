@@ -32,7 +32,10 @@ type model struct {
 func (o model) write(w io.Writer) {
 	fmt.Fprintf(w, "type %s struct {\n", strcase.ToCamel(o.name))
 
-	for idx, f := range o.fields {
+	fields := append([]modelField(nil), o.fields...)
+	fields = append(fields, permissionFields...)
+
+	for idx, f := range fields {
 		name := strcase.ToCamel(f.name)
 
 		switch f.name {
@@ -65,7 +68,7 @@ func (o model) write(w io.Writer) {
 	fmt.Fprintf(w, "  return &%s{ objectFields{} }\n", fieldsStruct)
 	fmt.Fprintf(w, "}\n")
 
-	for _, f := range o.fields {
+	for _, f := range fields {
 		if f.readOnly {
 			continue
 		}
@@ -78,6 +81,14 @@ func (o model) write(w io.Writer) {
 		fmt.Fprintf(w, "  return f\n")
 		fmt.Fprintf(w, "}\n")
 	}
+}
+
+var permissionFields = []modelField{
+	{
+		name:    "owner",
+		typ:     "*int64",
+		comment: "Object owner; objects without owner can be viewed and edited by all users.",
+	},
 }
 
 var correspondentModel = model{
