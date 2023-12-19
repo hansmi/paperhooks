@@ -421,3 +421,66 @@ func (f *TagFields) SetOwner(owner *int64) *TagFields {
 	f.set("owner", owner)
 	return f
 }
+
+type User struct {
+	ID          int64  `json:"id"`
+	Username    string `json:"username"`
+	Email       string `json:"email"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
+	IsActive    bool   `json:"is_active"`
+	IsStaff     bool   `json:"is_staff"`
+	IsSuperuser bool   `json:"is_superuser"`
+}
+
+type UserFields struct {
+	objectFields
+}
+
+var _ json.Marshaler = (*UserFields)(nil)
+
+func NewUserFields() *UserFields {
+	return &UserFields{objectFields{}}
+}
+
+// SetUsername sets the "username" field.
+func (f *UserFields) SetUsername(username string) *UserFields {
+	f.set("username", username)
+	return f
+}
+
+// SetEmail sets the "email" field.
+func (f *UserFields) SetEmail(email string) *UserFields {
+	f.set("email", email)
+	return f
+}
+
+// SetFirstName sets the "first_name" field.
+func (f *UserFields) SetFirstName(firstName string) *UserFields {
+	f.set("first_name", firstName)
+	return f
+}
+
+// SetLastName sets the "last_name" field.
+func (f *UserFields) SetLastName(lastName string) *UserFields {
+	f.set("last_name", lastName)
+	return f
+}
+
+// SetIsActive sets the "is_active" field.
+func (f *UserFields) SetIsActive(isActive bool) *UserFields {
+	f.set("is_active", isActive)
+	return f
+}
+
+// SetIsStaff sets the "is_staff" field.
+func (f *UserFields) SetIsStaff(isStaff bool) *UserFields {
+	f.set("is_staff", isStaff)
+	return f
+}
+
+// SetIsSuperuser sets the "is_superuser" field.
+func (f *UserFields) SetIsSuperuser(isSuperuser bool) *UserFields {
+	f.set("is_superuser", isSuperuser)
+	return f
+}

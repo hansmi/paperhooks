@@ -26,6 +26,7 @@ type modelField struct {
 
 type model struct {
 	name   string
+	owned  bool
 	fields []modelField
 }
 
@@ -33,7 +34,10 @@ func (o model) write(w io.Writer) {
 	fmt.Fprintf(w, "type %s struct {\n", strcase.ToCamel(o.name))
 
 	fields := append([]modelField(nil), o.fields...)
-	fields = append(fields, permissionFields...)
+
+	if o.owned {
+		fields = append(fields, ownerFields...)
+	}
 
 	for idx, f := range fields {
 		name := strcase.ToCamel(f.name)
@@ -90,7 +94,7 @@ func (o model) write(w io.Writer) {
 	}
 }
 
-var permissionFields = []modelField{
+var ownerFields = []modelField{
 	{
 		name:    "owner",
 		typ:     "*int64",
@@ -99,7 +103,8 @@ var permissionFields = []modelField{
 }
 
 var correspondentModel = model{
-	name: "correspondent",
+	name:  "correspondent",
+	owned: true,
 	fields: []modelField{
 		{name: "id", typ: "int64", readOnly: true},
 		{name: "slug", typ: "string", readOnly: true},
@@ -113,7 +118,8 @@ var correspondentModel = model{
 }
 
 var customFieldModel = model{
-	name: "customField",
+	name:  "customField",
+	owned: true,
 	fields: []modelField{
 		{name: "id", typ: "int64", readOnly: true},
 		{name: "name", typ: "string"},
@@ -122,7 +128,8 @@ var customFieldModel = model{
 }
 
 var documentModel = model{
-	name: "document",
+	name:  "document",
+	owned: true,
 	fields: []modelField{
 		{name: "id", typ: "int64", comment: "ID of the document.", readOnly: true},
 		{name: "title", typ: "string", comment: "Title of the document."},
@@ -142,7 +149,8 @@ var documentModel = model{
 }
 
 var storagePathModel = model{
-	name: "storagePath",
+	name:  "storagePath",
+	owned: true,
 	fields: []modelField{
 		{name: "id", typ: "int64", readOnly: true},
 		{name: "slug", typ: "string", readOnly: true},
@@ -155,7 +163,8 @@ var storagePathModel = model{
 }
 
 var tagModel = model{
-	name: "tag",
+	name:  "tag",
+	owned: true,
 	fields: []modelField{
 		{name: "id", typ: "int64", readOnly: true},
 		{name: "slug", typ: "string", readOnly: true},
@@ -171,7 +180,8 @@ var tagModel = model{
 }
 
 var documentTypeModel = model{
-	name: "documentType",
+	name:  "documentType",
+	owned: true,
 	fields: []modelField{
 		{name: "id", typ: "int64", readOnly: true},
 		{name: "slug", typ: "string", readOnly: true},
@@ -180,6 +190,20 @@ var documentTypeModel = model{
 		{name: "matching_algorithm", typ: "MatchingAlgorithm"},
 		{name: "is_insensitive", typ: "bool"},
 		{name: "document_count", typ: "int64", readOnly: true},
+	},
+}
+
+var userModel = model{
+	name: "user",
+	fields: []modelField{
+		{name: "id", typ: "int64", readOnly: true},
+		{name: "username", typ: "string"},
+		{name: "email", typ: "string"},
+		{name: "first_name", typ: "string"},
+		{name: "last_name", typ: "string"},
+		{name: "is_active", typ: "bool"},
+		{name: "is_staff", typ: "bool"},
+		{name: "is_superuser", typ: "bool"},
 	},
 }
 
@@ -217,6 +241,7 @@ func main() {
 		documentTypeModel,
 		storagePathModel,
 		tagModel,
+		userModel,
 	}
 
 	sort.Slice(models, func(a, b int) bool {
