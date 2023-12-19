@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"errors"
 )
 
 func (c *Client) userCrudOpts() crudOptions {
@@ -36,4 +37,29 @@ func (c *Client) ListAllUsers(ctx context.Context, opts ListUsersOptions, handle
 
 func (c *Client) GetUser(ctx context.Context, id int64) (*User, *Response, error) {
 	return crudGet[User](ctx, c.userCrudOpts(), id)
+}
+
+// GetCurrentUser looks up the authenticated user.
+func (c *Client) GetCurrentUser(ctx context.Context) (*User, *Response, error) {
+	type uiSettings struct {
+		User struct {
+			ID *int64 `json:"id"`
+		} `json:"user"`
+	}
+
+	req := c.newRequest(ctx).SetResult(uiSettings{})
+
+	resp, err := req.Get("api/ui_settings/")
+
+	if err := convertError(err, resp); err != nil {
+		return nil, wrapResponse(resp), err
+	}
+
+	userID := resp.Result().(*uiSettings).User.ID
+
+	if userID == nil {
+		return nil, wrapResponse(resp), errors.New("missing user ID in response")
+	}
+
+	return c.GetUser(ctx, *userID)
 }

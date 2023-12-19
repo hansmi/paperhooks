@@ -251,6 +251,17 @@ func (t *readOnlyTests) logs(ctx context.Context) error {
 	return nil
 }
 
+func (t *readOnlyTests) currentUser(ctx context.Context) error {
+	got, _, err := t.client.GetCurrentUser(ctx)
+	if err != nil {
+		return fmt.Errorf("gettng current user: %w", err)
+	}
+
+	t.logger.Printf("Current user: %#v", got)
+
+	return nil
+}
+
 func (t *readOnlyTests) users(ctx context.Context) error {
 	var opts client.ListUsersOptions
 
