@@ -291,6 +291,27 @@ func (f *DocumentTypeFields) SetOwner(owner *int64) *DocumentTypeFields {
 	return f
 }
 
+type Group struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
+type GroupFields struct {
+	objectFields
+}
+
+var _ json.Marshaler = (*GroupFields)(nil)
+
+func NewGroupFields() *GroupFields {
+	return &GroupFields{objectFields{}}
+}
+
+// SetName sets the "name" field.
+func (f *GroupFields) SetName(name string) *GroupFields {
+	f.set("name", name)
+	return f
+}
+
 type StoragePath struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`

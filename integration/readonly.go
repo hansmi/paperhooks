@@ -283,3 +283,17 @@ func (t *readOnlyTests) users(ctx context.Context) error {
 
 	return nil
 }
+
+func (t *readOnlyTests) groups(ctx context.Context) error {
+	var opts client.ListGroupsOptions
+
+	if err := t.client.ListAllGroups(ctx, opts, func(ctx context.Context, group client.Group) error {
+		t.logger.Printf("Received group: %#v", group)
+
+		return nil
+	}); err != nil {
+		return fmt.Errorf("listing groups: %w", err)
+	}
+
+	return nil
+}

@@ -53,6 +53,7 @@ func main() {
 		ro.logs,
 		ro.currentUser,
 		ro.users,
+		ro.groups,
 	}
 
 	if *destructive {

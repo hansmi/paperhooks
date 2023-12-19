@@ -207,6 +207,14 @@ var userModel = model{
 	},
 }
 
+var groupModel = model{
+	name: "group",
+	fields: []modelField{
+		{name: "id", typ: "int64", readOnly: true},
+		{name: "name", typ: "string"},
+	},
+}
+
 func main() {
 	outputFile := flag.String("output", "", "Destination file")
 
@@ -242,6 +250,7 @@ func main() {
 		storagePathModel,
 		tagModel,
 		userModel,
+		groupModel,
 	}
 
 	sort.Slice(models, func(a, b int) bool {
