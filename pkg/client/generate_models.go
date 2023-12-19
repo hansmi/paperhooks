@@ -47,7 +47,7 @@ func (o model) write(w io.Writer) {
 			if idx > 0 {
 				fmt.Fprintf(w, "\n")
 			}
-			fmt.Fprintf(w, "  // %s\n", f.comment)
+			fmt.Fprintf(w, "  // %s\n", strings.TrimSpace(f.comment))
 		}
 
 		fmt.Fprintf(w, "  %s %s `json:%q`\n", name, f.typ, f.name)
@@ -75,8 +75,15 @@ func (o model) write(w io.Writer) {
 
 		argName := strcase.ToLowerCamel(f.name)
 
+		funcName := fmt.Sprintf("Set%s", strcase.ToCamel(f.name))
+
 		fmt.Fprintf(w, "\n")
-		fmt.Fprintf(w, "func (f *%s) Set%s(%s %s) *%[1]s {\n", fieldsStruct, strcase.ToCamel(f.name), argName, f.typ)
+		fmt.Fprintf(w, "// %s sets the %q field.\n", funcName, f.name)
+		if f.comment != "" {
+			fmt.Fprintf(w, "//\n")
+			fmt.Fprintf(w, "// %s\n", strings.TrimSpace(f.comment))
+		}
+		fmt.Fprintf(w, "func (f *%s) %s(%s %s) *%[1]s {\n", fieldsStruct, funcName, argName, f.typ)
 		fmt.Fprintf(w, "  f.set(%q, %s)\n", f.name, argName)
 		fmt.Fprintf(w, "  return f\n")
 		fmt.Fprintf(w, "}\n")

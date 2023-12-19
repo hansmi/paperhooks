@@ -28,26 +28,33 @@ func NewCorrespondentFields() *CorrespondentFields {
 	return &CorrespondentFields{objectFields{}}
 }
 
+// SetName sets the "name" field.
 func (f *CorrespondentFields) SetName(name string) *CorrespondentFields {
 	f.set("name", name)
 	return f
 }
 
+// SetMatch sets the "match" field.
 func (f *CorrespondentFields) SetMatch(match string) *CorrespondentFields {
 	f.set("match", match)
 	return f
 }
 
+// SetMatchingAlgorithm sets the "matching_algorithm" field.
 func (f *CorrespondentFields) SetMatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *CorrespondentFields {
 	f.set("matching_algorithm", matchingAlgorithm)
 	return f
 }
 
+// SetIsInsensitive sets the "is_insensitive" field.
 func (f *CorrespondentFields) SetIsInsensitive(isInsensitive bool) *CorrespondentFields {
 	f.set("is_insensitive", isInsensitive)
 	return f
 }
 
+// SetOwner sets the "owner" field.
+//
+// Object owner; objects without owner can be viewed and edited by all users.
 func (f *CorrespondentFields) SetOwner(owner *int64) *CorrespondentFields {
 	f.set("owner", owner)
 	return f
@@ -72,16 +79,21 @@ func NewCustomFieldFields() *CustomFieldFields {
 	return &CustomFieldFields{objectFields{}}
 }
 
+// SetName sets the "name" field.
 func (f *CustomFieldFields) SetName(name string) *CustomFieldFields {
 	f.set("name", name)
 	return f
 }
 
+// SetDataType sets the "data_type" field.
 func (f *CustomFieldFields) SetDataType(dataType string) *CustomFieldFields {
 	f.set("data_type", dataType)
 	return f
 }
 
+// SetOwner sets the "owner" field.
+//
+// Object owner; objects without owner can be viewed and edited by all users.
 func (f *CustomFieldFields) SetOwner(owner *int64) *CustomFieldFields {
 	f.set("owner", owner)
 	return f
@@ -144,51 +156,81 @@ func NewDocumentFields() *DocumentFields {
 	return &DocumentFields{objectFields{}}
 }
 
+// SetTitle sets the "title" field.
+//
+// Title of the document.
 func (f *DocumentFields) SetTitle(title string) *DocumentFields {
 	f.set("title", title)
 	return f
 }
 
+// SetContent sets the "content" field.
+//
+// Plain-text content of the document.
 func (f *DocumentFields) SetContent(content string) *DocumentFields {
 	f.set("content", content)
 	return f
 }
 
+// SetTags sets the "tags" field.
+//
+// List of tag IDs assigned to this document, or empty list.
 func (f *DocumentFields) SetTags(tags []int64) *DocumentFields {
 	f.set("tags", tags)
 	return f
 }
 
+// SetDocumentType sets the "document_type" field.
+//
+// Document type of this document or nil.
 func (f *DocumentFields) SetDocumentType(documentType *int64) *DocumentFields {
 	f.set("document_type", documentType)
 	return f
 }
 
+// SetCorrespondent sets the "correspondent" field.
+//
+// Correspondent of this document or nil.
 func (f *DocumentFields) SetCorrespondent(correspondent *int64) *DocumentFields {
 	f.set("correspondent", correspondent)
 	return f
 }
 
+// SetStoragePath sets the "storage_path" field.
+//
+// Storage path of this document or nil.
 func (f *DocumentFields) SetStoragePath(storagePath *int64) *DocumentFields {
 	f.set("storage_path", storagePath)
 	return f
 }
 
+// SetCreated sets the "created" field.
+//
+// The date time at which this document was created.
 func (f *DocumentFields) SetCreated(created time.Time) *DocumentFields {
 	f.set("created", created)
 	return f
 }
 
+// SetArchiveSerialNumber sets the "archive_serial_number" field.
+//
+// The identifier of this document in a physical document archive.
 func (f *DocumentFields) SetArchiveSerialNumber(archiveSerialNumber *int64) *DocumentFields {
 	f.set("archive_serial_number", archiveSerialNumber)
 	return f
 }
 
+// SetCustomFields sets the "custom_fields" field.
+//
+// Custom fields on the document.
 func (f *DocumentFields) SetCustomFields(customFields []CustomFieldInstance) *DocumentFields {
 	f.set("custom_fields", customFields)
 	return f
 }
 
+// SetOwner sets the "owner" field.
+//
+// Object owner; objects without owner can be viewed and edited by all users.
 func (f *DocumentFields) SetOwner(owner *int64) *DocumentFields {
 	f.set("owner", owner)
 	return f
@@ -217,26 +259,33 @@ func NewDocumentTypeFields() *DocumentTypeFields {
 	return &DocumentTypeFields{objectFields{}}
 }
 
+// SetName sets the "name" field.
 func (f *DocumentTypeFields) SetName(name string) *DocumentTypeFields {
 	f.set("name", name)
 	return f
 }
 
+// SetMatch sets the "match" field.
 func (f *DocumentTypeFields) SetMatch(match string) *DocumentTypeFields {
 	f.set("match", match)
 	return f
 }
 
+// SetMatchingAlgorithm sets the "matching_algorithm" field.
 func (f *DocumentTypeFields) SetMatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *DocumentTypeFields {
 	f.set("matching_algorithm", matchingAlgorithm)
 	return f
 }
 
+// SetIsInsensitive sets the "is_insensitive" field.
 func (f *DocumentTypeFields) SetIsInsensitive(isInsensitive bool) *DocumentTypeFields {
 	f.set("is_insensitive", isInsensitive)
 	return f
 }
 
+// SetOwner sets the "owner" field.
+//
+// Object owner; objects without owner can be viewed and edited by all users.
 func (f *DocumentTypeFields) SetOwner(owner *int64) *DocumentTypeFields {
 	f.set("owner", owner)
 	return f
@@ -265,26 +314,33 @@ func NewStoragePathFields() *StoragePathFields {
 	return &StoragePathFields{objectFields{}}
 }
 
+// SetName sets the "name" field.
 func (f *StoragePathFields) SetName(name string) *StoragePathFields {
 	f.set("name", name)
 	return f
 }
 
+// SetMatch sets the "match" field.
 func (f *StoragePathFields) SetMatch(match string) *StoragePathFields {
 	f.set("match", match)
 	return f
 }
 
+// SetMatchingAlgorithm sets the "matching_algorithm" field.
 func (f *StoragePathFields) SetMatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *StoragePathFields {
 	f.set("matching_algorithm", matchingAlgorithm)
 	return f
 }
 
+// SetIsInsensitive sets the "is_insensitive" field.
 func (f *StoragePathFields) SetIsInsensitive(isInsensitive bool) *StoragePathFields {
 	f.set("is_insensitive", isInsensitive)
 	return f
 }
 
+// SetOwner sets the "owner" field.
+//
+// Object owner; objects without owner can be viewed and edited by all users.
 func (f *StoragePathFields) SetOwner(owner *int64) *StoragePathFields {
 	f.set("owner", owner)
 	return f
@@ -316,41 +372,51 @@ func NewTagFields() *TagFields {
 	return &TagFields{objectFields{}}
 }
 
+// SetName sets the "name" field.
 func (f *TagFields) SetName(name string) *TagFields {
 	f.set("name", name)
 	return f
 }
 
+// SetColor sets the "color" field.
 func (f *TagFields) SetColor(color Color) *TagFields {
 	f.set("color", color)
 	return f
 }
 
+// SetTextColor sets the "text_color" field.
 func (f *TagFields) SetTextColor(textColor Color) *TagFields {
 	f.set("text_color", textColor)
 	return f
 }
 
+// SetMatch sets the "match" field.
 func (f *TagFields) SetMatch(match string) *TagFields {
 	f.set("match", match)
 	return f
 }
 
+// SetMatchingAlgorithm sets the "matching_algorithm" field.
 func (f *TagFields) SetMatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *TagFields {
 	f.set("matching_algorithm", matchingAlgorithm)
 	return f
 }
 
+// SetIsInsensitive sets the "is_insensitive" field.
 func (f *TagFields) SetIsInsensitive(isInsensitive bool) *TagFields {
 	f.set("is_insensitive", isInsensitive)
 	return f
 }
 
+// SetIsInboxTag sets the "is_inbox_tag" field.
 func (f *TagFields) SetIsInboxTag(isInboxTag bool) *TagFields {
 	f.set("is_inbox_tag", isInboxTag)
 	return f
 }
 
+// SetOwner sets the "owner" field.
+//
+// Object owner; objects without owner can be viewed and edited by all users.
 func (f *TagFields) SetOwner(owner *int64) *TagFields {
 	f.set("owner", owner)
 	return f
