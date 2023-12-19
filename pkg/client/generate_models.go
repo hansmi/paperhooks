@@ -18,10 +18,11 @@ import (
 )
 
 type modelField struct {
-	name     string
-	typ      string
-	comment  string
-	readOnly bool
+	name      string
+	typ       string
+	comment   string
+	readOnly  bool
+	writeOnly bool
 }
 
 type model struct {
@@ -36,10 +37,14 @@ func (o model) write(w io.Writer) {
 	fields := append([]modelField(nil), o.fields...)
 
 	if o.owned {
-		fields = append(fields, ownerFields...)
+		fields = append(fields, ownedModelFields...)
 	}
 
 	for idx, f := range fields {
+		if f.writeOnly {
+			continue
+		}
+
 		name := strcase.ToCamel(f.name)
 
 		switch f.name {
@@ -94,11 +99,17 @@ func (o model) write(w io.Writer) {
 	}
 }
 
-var ownerFields = []modelField{
+var ownedModelFields = []modelField{
 	{
 		name:    "owner",
 		typ:     "*int64",
 		comment: "Object owner; objects without owner can be viewed and edited by all users.",
+	},
+	{
+		name:      "set_permissions",
+		typ:       "*ObjectPermissions",
+		comment:   "Change object-level permissions.",
+		writeOnly: true,
 	},
 }
 

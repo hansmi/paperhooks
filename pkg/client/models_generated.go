@@ -60,6 +60,14 @@ func (f *CorrespondentFields) SetOwner(owner *int64) *CorrespondentFields {
 	return f
 }
 
+// SetSetPermissions sets the "set_permissions" field.
+//
+// Change object-level permissions.
+func (f *CorrespondentFields) SetSetPermissions(setPermissions *ObjectPermissions) *CorrespondentFields {
+	f.set("set_permissions", setPermissions)
+	return f
+}
+
 type CustomField struct {
 	ID       int64  `json:"id"`
 	Name     string `json:"name"`
@@ -96,6 +104,14 @@ func (f *CustomFieldFields) SetDataType(dataType string) *CustomFieldFields {
 // Object owner; objects without owner can be viewed and edited by all users.
 func (f *CustomFieldFields) SetOwner(owner *int64) *CustomFieldFields {
 	f.set("owner", owner)
+	return f
+}
+
+// SetSetPermissions sets the "set_permissions" field.
+//
+// Change object-level permissions.
+func (f *CustomFieldFields) SetSetPermissions(setPermissions *ObjectPermissions) *CustomFieldFields {
+	f.set("set_permissions", setPermissions)
 	return f
 }
 
@@ -236,6 +252,14 @@ func (f *DocumentFields) SetOwner(owner *int64) *DocumentFields {
 	return f
 }
 
+// SetSetPermissions sets the "set_permissions" field.
+//
+// Change object-level permissions.
+func (f *DocumentFields) SetSetPermissions(setPermissions *ObjectPermissions) *DocumentFields {
+	f.set("set_permissions", setPermissions)
+	return f
+}
+
 type DocumentType struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
@@ -288,6 +312,14 @@ func (f *DocumentTypeFields) SetIsInsensitive(isInsensitive bool) *DocumentTypeF
 // Object owner; objects without owner can be viewed and edited by all users.
 func (f *DocumentTypeFields) SetOwner(owner *int64) *DocumentTypeFields {
 	f.set("owner", owner)
+	return f
+}
+
+// SetSetPermissions sets the "set_permissions" field.
+//
+// Change object-level permissions.
+func (f *DocumentTypeFields) SetSetPermissions(setPermissions *ObjectPermissions) *DocumentTypeFields {
+	f.set("set_permissions", setPermissions)
 	return f
 }
 
@@ -367,6 +399,14 @@ func (f *StoragePathFields) SetOwner(owner *int64) *StoragePathFields {
 	return f
 }
 
+// SetSetPermissions sets the "set_permissions" field.
+//
+// Change object-level permissions.
+func (f *StoragePathFields) SetSetPermissions(setPermissions *ObjectPermissions) *StoragePathFields {
+	f.set("set_permissions", setPermissions)
+	return f
+}
+
 type Tag struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
@@ -440,6 +480,14 @@ func (f *TagFields) SetIsInboxTag(isInboxTag bool) *TagFields {
 // Object owner; objects without owner can be viewed and edited by all users.
 func (f *TagFields) SetOwner(owner *int64) *TagFields {
 	f.set("owner", owner)
+	return f
+}
+
+// SetSetPermissions sets the "set_permissions" field.
+//
+// Change object-level permissions.
+func (f *TagFields) SetSetPermissions(setPermissions *ObjectPermissions) *TagFields {
+	f.set("set_permissions", setPermissions)
 	return f
 }
 
