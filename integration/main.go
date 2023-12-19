@@ -51,6 +51,7 @@ func main() {
 		ro.documents,
 		ro.tasks,
 		ro.logs,
+		ro.users,
 	}
 
 	if *destructive {

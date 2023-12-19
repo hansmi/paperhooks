@@ -250,3 +250,25 @@ func (t *readOnlyTests) logs(ctx context.Context) error {
 
 	return nil
 }
+
+func (t *readOnlyTests) users(ctx context.Context) error {
+	var opts client.ListUsersOptions
+
+	count := 0
+
+	if err := t.client.ListAllUsers(ctx, opts, func(ctx context.Context, user client.User) error {
+		count++
+
+		t.logger.Printf("Received user: %#v", user)
+
+		return nil
+	}); err != nil {
+		return fmt.Errorf("listing users: %w", err)
+	}
+
+	if count < 1 {
+		return errors.New("no users found")
+	}
+
+	return nil
+}
