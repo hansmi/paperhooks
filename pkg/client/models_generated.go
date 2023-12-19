@@ -28,27 +28,27 @@ func NewCorrespondentFields() *CorrespondentFields {
 	return &CorrespondentFields{objectFields{}}
 }
 
-func (f *CorrespondentFields) Name(name string) *CorrespondentFields {
+func (f *CorrespondentFields) SetName(name string) *CorrespondentFields {
 	f.set("name", name)
 	return f
 }
 
-func (f *CorrespondentFields) Match(match string) *CorrespondentFields {
+func (f *CorrespondentFields) SetMatch(match string) *CorrespondentFields {
 	f.set("match", match)
 	return f
 }
 
-func (f *CorrespondentFields) MatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *CorrespondentFields {
+func (f *CorrespondentFields) SetMatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *CorrespondentFields {
 	f.set("matching_algorithm", matchingAlgorithm)
 	return f
 }
 
-func (f *CorrespondentFields) IsInsensitive(isInsensitive bool) *CorrespondentFields {
+func (f *CorrespondentFields) SetIsInsensitive(isInsensitive bool) *CorrespondentFields {
 	f.set("is_insensitive", isInsensitive)
 	return f
 }
 
-func (f *CorrespondentFields) Owner(owner *int64) *CorrespondentFields {
+func (f *CorrespondentFields) SetOwner(owner *int64) *CorrespondentFields {
 	f.set("owner", owner)
 	return f
 }
@@ -72,17 +72,17 @@ func NewCustomFieldFields() *CustomFieldFields {
 	return &CustomFieldFields{objectFields{}}
 }
 
-func (f *CustomFieldFields) Name(name string) *CustomFieldFields {
+func (f *CustomFieldFields) SetName(name string) *CustomFieldFields {
 	f.set("name", name)
 	return f
 }
 
-func (f *CustomFieldFields) DataType(dataType string) *CustomFieldFields {
+func (f *CustomFieldFields) SetDataType(dataType string) *CustomFieldFields {
 	f.set("data_type", dataType)
 	return f
 }
 
-func (f *CustomFieldFields) Owner(owner *int64) *CustomFieldFields {
+func (f *CustomFieldFields) SetOwner(owner *int64) *CustomFieldFields {
 	f.set("owner", owner)
 	return f
 }
@@ -144,52 +144,52 @@ func NewDocumentFields() *DocumentFields {
 	return &DocumentFields{objectFields{}}
 }
 
-func (f *DocumentFields) Title(title string) *DocumentFields {
+func (f *DocumentFields) SetTitle(title string) *DocumentFields {
 	f.set("title", title)
 	return f
 }
 
-func (f *DocumentFields) Content(content string) *DocumentFields {
+func (f *DocumentFields) SetContent(content string) *DocumentFields {
 	f.set("content", content)
 	return f
 }
 
-func (f *DocumentFields) Tags(tags []int64) *DocumentFields {
+func (f *DocumentFields) SetTags(tags []int64) *DocumentFields {
 	f.set("tags", tags)
 	return f
 }
 
-func (f *DocumentFields) DocumentType(documentType *int64) *DocumentFields {
+func (f *DocumentFields) SetDocumentType(documentType *int64) *DocumentFields {
 	f.set("document_type", documentType)
 	return f
 }
 
-func (f *DocumentFields) Correspondent(correspondent *int64) *DocumentFields {
+func (f *DocumentFields) SetCorrespondent(correspondent *int64) *DocumentFields {
 	f.set("correspondent", correspondent)
 	return f
 }
 
-func (f *DocumentFields) StoragePath(storagePath *int64) *DocumentFields {
+func (f *DocumentFields) SetStoragePath(storagePath *int64) *DocumentFields {
 	f.set("storage_path", storagePath)
 	return f
 }
 
-func (f *DocumentFields) Created(created time.Time) *DocumentFields {
+func (f *DocumentFields) SetCreated(created time.Time) *DocumentFields {
 	f.set("created", created)
 	return f
 }
 
-func (f *DocumentFields) ArchiveSerialNumber(archiveSerialNumber *int64) *DocumentFields {
+func (f *DocumentFields) SetArchiveSerialNumber(archiveSerialNumber *int64) *DocumentFields {
 	f.set("archive_serial_number", archiveSerialNumber)
 	return f
 }
 
-func (f *DocumentFields) CustomFields(customFields []CustomFieldInstance) *DocumentFields {
+func (f *DocumentFields) SetCustomFields(customFields []CustomFieldInstance) *DocumentFields {
 	f.set("custom_fields", customFields)
 	return f
 }
 
-func (f *DocumentFields) Owner(owner *int64) *DocumentFields {
+func (f *DocumentFields) SetOwner(owner *int64) *DocumentFields {
 	f.set("owner", owner)
 	return f
 }
@@ -217,27 +217,27 @@ func NewDocumentTypeFields() *DocumentTypeFields {
 	return &DocumentTypeFields{objectFields{}}
 }
 
-func (f *DocumentTypeFields) Name(name string) *DocumentTypeFields {
+func (f *DocumentTypeFields) SetName(name string) *DocumentTypeFields {
 	f.set("name", name)
 	return f
 }
 
-func (f *DocumentTypeFields) Match(match string) *DocumentTypeFields {
+func (f *DocumentTypeFields) SetMatch(match string) *DocumentTypeFields {
 	f.set("match", match)
 	return f
 }
 
-func (f *DocumentTypeFields) MatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *DocumentTypeFields {
+func (f *DocumentTypeFields) SetMatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *DocumentTypeFields {
 	f.set("matching_algorithm", matchingAlgorithm)
 	return f
 }
 
-func (f *DocumentTypeFields) IsInsensitive(isInsensitive bool) *DocumentTypeFields {
+func (f *DocumentTypeFields) SetIsInsensitive(isInsensitive bool) *DocumentTypeFields {
 	f.set("is_insensitive", isInsensitive)
 	return f
 }
 
-func (f *DocumentTypeFields) Owner(owner *int64) *DocumentTypeFields {
+func (f *DocumentTypeFields) SetOwner(owner *int64) *DocumentTypeFields {
 	f.set("owner", owner)
 	return f
 }
@@ -265,27 +265,27 @@ func NewStoragePathFields() *StoragePathFields {
 	return &StoragePathFields{objectFields{}}
 }
 
-func (f *StoragePathFields) Name(name string) *StoragePathFields {
+func (f *StoragePathFields) SetName(name string) *StoragePathFields {
 	f.set("name", name)
 	return f
 }
 
-func (f *StoragePathFields) Match(match string) *StoragePathFields {
+func (f *StoragePathFields) SetMatch(match string) *StoragePathFields {
 	f.set("match", match)
 	return f
 }
 
-func (f *StoragePathFields) MatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *StoragePathFields {
+func (f *StoragePathFields) SetMatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *StoragePathFields {
 	f.set("matching_algorithm", matchingAlgorithm)
 	return f
 }
 
-func (f *StoragePathFields) IsInsensitive(isInsensitive bool) *StoragePathFields {
+func (f *StoragePathFields) SetIsInsensitive(isInsensitive bool) *StoragePathFields {
 	f.set("is_insensitive", isInsensitive)
 	return f
 }
 
-func (f *StoragePathFields) Owner(owner *int64) *StoragePathFields {
+func (f *StoragePathFields) SetOwner(owner *int64) *StoragePathFields {
 	f.set("owner", owner)
 	return f
 }
@@ -316,42 +316,42 @@ func NewTagFields() *TagFields {
 	return &TagFields{objectFields{}}
 }
 
-func (f *TagFields) Name(name string) *TagFields {
+func (f *TagFields) SetName(name string) *TagFields {
 	f.set("name", name)
 	return f
 }
 
-func (f *TagFields) Color(color Color) *TagFields {
+func (f *TagFields) SetColor(color Color) *TagFields {
 	f.set("color", color)
 	return f
 }
 
-func (f *TagFields) TextColor(textColor Color) *TagFields {
+func (f *TagFields) SetTextColor(textColor Color) *TagFields {
 	f.set("text_color", textColor)
 	return f
 }
 
-func (f *TagFields) Match(match string) *TagFields {
+func (f *TagFields) SetMatch(match string) *TagFields {
 	f.set("match", match)
 	return f
 }
 
-func (f *TagFields) MatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *TagFields {
+func (f *TagFields) SetMatchingAlgorithm(matchingAlgorithm MatchingAlgorithm) *TagFields {
 	f.set("matching_algorithm", matchingAlgorithm)
 	return f
 }
 
-func (f *TagFields) IsInsensitive(isInsensitive bool) *TagFields {
+func (f *TagFields) SetIsInsensitive(isInsensitive bool) *TagFields {
 	f.set("is_insensitive", isInsensitive)
 	return f
 }
 
-func (f *TagFields) IsInboxTag(isInboxTag bool) *TagFields {
+func (f *TagFields) SetIsInboxTag(isInboxTag bool) *TagFields {
 	f.set("is_inbox_tag", isInboxTag)
 	return f
 }
 
-func (f *TagFields) Owner(owner *int64) *TagFields {
+func (f *TagFields) SetOwner(owner *int64) *TagFields {
 	f.set("owner", owner)
 	return f
 }

@@ -76,7 +76,7 @@ func (o model) write(w io.Writer) {
 		argName := strcase.ToLowerCamel(f.name)
 
 		fmt.Fprintf(w, "\n")
-		fmt.Fprintf(w, "func (f *%s) %s(%s %s) *%[1]s {\n", fieldsStruct, strcase.ToCamel(f.name), argName, f.typ)
+		fmt.Fprintf(w, "func (f *%s) Set%s(%s %s) *%[1]s {\n", fieldsStruct, strcase.ToCamel(f.name), argName, f.typ)
 		fmt.Fprintf(w, "  f.set(%q, %s)\n", f.name, argName)
 		fmt.Fprintf(w, "  return f\n")
 		fmt.Fprintf(w, "}\n")

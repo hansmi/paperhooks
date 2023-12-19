@@ -15,7 +15,7 @@ import (
 
 func TestTagFieldsAsMap(t *testing.T) {
 	f := NewTagFields()
-	f = f.Name("test").IsInboxTag(true)
+	f = f.SetName("test").SetIsInboxTag(true)
 
 	want := map[string]any{
 		"name":         "test",
@@ -374,7 +374,7 @@ func TestCreateTag(t *testing.T) {
 		},
 		{
 			name:  "success",
-			input: NewTagFields().Name("foo"),
+			input: NewTagFields().SetName("foo"),
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterMatcherResponder(http.MethodPost, "/api/tags/",
 					httpmock.BodyContainsString(`"foo"`),
@@ -519,7 +519,7 @@ func TestPatchTag(t *testing.T) {
 					}`))
 			},
 			id:    4616,
-			input: NewTagFields().Name("newname"),
+			input: NewTagFields().SetName("newname"),
 			want: &Tag{
 				ID:   16975,
 				Name: "blubb",

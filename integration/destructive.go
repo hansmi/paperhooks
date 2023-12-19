@@ -22,8 +22,8 @@ func (t *destructiveTests) tags(ctx context.Context) error {
 	t.logger.Printf("Create tag %q", name)
 
 	tag, _, err := t.client.CreateTag(ctx, client.NewTagFields().
-		Name(name).
-		MatchingAlgorithm(client.MatchAny))
+		SetName(name).
+		SetMatchingAlgorithm(client.MatchAny))
 	if err != nil {
 		return fmt.Errorf("creating tag %s failed: %w", name, err)
 	}
