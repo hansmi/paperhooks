@@ -51,6 +51,15 @@ func TestDownload(t *testing.T) {
 				Message:    `418`,
 			},
 		},
+		{
+			name: "connection error",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/conn/error",
+					httpmock.ConnectionFailure)
+			},
+			url:     "/conn/error",
+			wantErr: cmpopts.AnyError,
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			transport := newMockTransport(t)

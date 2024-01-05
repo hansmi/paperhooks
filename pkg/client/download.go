@@ -30,8 +30,8 @@ func (c *Client) download(ctx context.Context, w io.Writer, url string, expectDi
 
 	resp, err := req.Get(url)
 
-	if resp != nil {
-		defer multierr.AppendInvoke(&err, multierr.Close(resp.RawBody()))
+	if !(resp == nil || resp.RawBody() == nil) {
+		defer multierr.AppendFunc(&err, resp.RawBody().Close)
 	}
 
 	if err := convertError(err, resp); err != nil {
