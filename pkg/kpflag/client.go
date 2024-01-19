@@ -10,48 +10,49 @@ import (
 
 // RegisterClient adds flags for creating a Paperless-ngx API client.
 func RegisterClient(g FlagGroup, f *client.Flags) {
-	g.Flag("paperless_url", "Base URL for accessing Paperless.").
+	b := builder{g}
+
+	b.flag("paperless_url", "Base URL for accessing Paperless.").
 		PlaceHolder("URL").
-		Envar("PAPERLESS_URL").StringVar(&f.BaseURL)
+		StringVar(&f.BaseURL)
 
-	g.Flag("paperless_auth_token", "Authentication token for Paperless. Reading the token from a file is preferrable.").
+	b.flag("paperless_auth_token", "Authentication token for Paperless. Reading the token from a file is preferrable.").
 		PlaceHolder("TOKEN").
-		Envar("PAPERLESS_AUTH_TOKEN").StringVar(&f.AuthToken)
+		StringVar(&f.AuthToken)
 
-	g.Flag("paperless_auth_token_file", "File containing authentication token for Paperless.").
+	b.flag("paperless_auth_token_file", "File containing authentication token for Paperless.").
 		PlaceHolder("PATH").
-		Envar("PAPERLESS_AUTH_TOKEN_FILE").StringVar(&f.AuthTokenFile)
+		StringVar(&f.AuthTokenFile)
 
-	g.Flag("paperless_auth_username", "Username for HTTP basic authentication.").
+	b.flag("paperless_auth_username", "Username for HTTP basic authentication.").
 		PlaceHolder("NAME").
-		Envar("PAPERLESS_AUTH_USERNAME").StringVar(&f.AuthUsername)
+		StringVar(&f.AuthUsername)
 
-	g.Flag("paperless_auth_password", "Password for HTTP basic authentication. Reading the password from a file is preferrable.").
+	b.flag("paperless_auth_password", "Password for HTTP basic authentication. Reading the password from a file is preferrable.").
 		PlaceHolder("PASSWORD").
-		Envar("PAPERLESS_AUTH_PASSWORD").StringVar(&f.AuthPassword)
+		StringVar(&f.AuthPassword)
 
-	g.Flag("paperless_auth_password_file", "Username for HTTP basic authentication.").
+	b.flag("paperless_auth_password_file", "Username for HTTP basic authentication.").
 		PlaceHolder("PATH").
-		Envar("PAPERLESS_AUTH_PASSWORD_FILE").StringVar(&f.AuthPasswordFile)
+		StringVar(&f.AuthPasswordFile)
 
-	g.Flag("paperless_auth_gcp_service_account_key_file", "Authenticate using OpenID Connect (OIDC) ID tokens derived from a Google Cloud Platform service account key file.").
+	b.flag("paperless_auth_gcp_service_account_key_file", "Authenticate using OpenID Connect (OIDC) ID tokens derived from a Google Cloud Platform service account key file.").
 		PlaceHolder("PATH").
-		Envar("PAPERLESS_AUTH_GCP_SERVICE_ACCOUNT_KEY_FILE").StringVar(&f.AuthGCPServiceAccountKeyFile)
+		StringVar(&f.AuthGCPServiceAccountKeyFile)
 
-	g.Flag("paperless_auth_oidc_id_token_audience", "Target audience for OpenID Connect (OIDC) ID tokens. Defaults to the base URL.").
+	b.flag("paperless_auth_oidc_id_token_audience", "Target audience for OpenID Connect (OIDC) ID tokens. Defaults to the base URL.").
 		PlaceHolder("STRING").
-		Envar("PAPERLESS_AUTH_OIDC_ID_TOKEN_AUDIENCE").StringVar(&f.AuthOIDCIDTokenAudience)
+		StringVar(&f.AuthOIDCIDTokenAudience)
 
 	kpflagvalue.HTTPHeaderVar(
-		g.Flag("paperless_header", "HTTP headers to set on all requests to Paperless.").
-			PlaceHolder("KEY:VALUE").
-			Envar("PAPERLESS_HEADER"), &f.Header)
+		b.flag("paperless_header", "HTTP headers to set on all requests to Paperless.").
+			PlaceHolder("KEY:VALUE"),
+		&f.Header)
 
-	g.Flag("paperless_server_timezone", fmt.Sprintf("Timezone for parsing timestamps. Defaults to %q.", time.Local.String())).
+	b.flag("paperless_server_timezone", fmt.Sprintf("Timezone for parsing timestamps. Defaults to %q.", time.Local.String())).
 		PlaceHolder("AREA/LOCATION").
-		Envar("PAPERLESS_SERVER_TIMEZONE").StringVar(&f.ServerTimezone)
+		StringVar(&f.ServerTimezone)
 
-	g.Flag("paperless_client_debug", "Enable verbose logging messages.").
-		Envar("PAPERLESS_CLIENT_DEBUG").
+	b.flag("paperless_client_debug", "Enable verbose logging messages.").
 		BoolVar(&f.DebugMode)
 }
