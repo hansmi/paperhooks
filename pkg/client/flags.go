@@ -42,6 +42,14 @@ type Flags struct {
 	// Read the password from a file.
 	AuthPasswordFile string
 
+	// Authenticate using OpenID Connect (OIDC) ID tokens derived from a Google
+	// Cloud Platform service account key file.
+	AuthGCPServiceAccountKeyFile string
+
+	// Target audience for OpenID Connect (OIDC) ID tokens. May be left empty,
+	// in which case the Paperless URL is used verbatim.
+	AuthOIDCIDTokenAudience string
+
 	// HTTP headers to set on all requests.
 	Header http.Header
 
@@ -81,6 +89,18 @@ func (f *Flags) buildAuth() (AuthMechanism, error) {
 			Username: f.AuthUsername,
 			Password: password,
 		}, nil
+	}
+
+	if f.AuthGCPServiceAccountKeyFile != "" {
+		a, err := GCPServiceAccountKeyAuth{
+			KeyFile:  f.AuthGCPServiceAccountKeyFile,
+			Audience: f.AuthOIDCIDTokenAudience,
+		}.Build()
+		if err != nil {
+			return nil, fmt.Errorf("GCP service account key authentication: %w", err)
+		}
+
+		return a, nil
 	}
 
 	return nil, nil

@@ -4,9 +4,12 @@
 //
 // # Authentication
 //
-// Paperless-ngx supports multiple [authentication schemes].
-// [UsernamePasswordAuth] implements HTTP basic authentication and [TokenAuth]
-// authentication tokens.
+// Multiple [authentication schemes] are supported:
+//
+//   - [UsernamePasswordAuth]: HTTP basic authentication.
+//   - [TokenAuth]: Paperless-ngx API authentication tokens.
+//   - [GCPServiceAccountKeyAuth]: OpenID Connect (OIDC) using a Google Cloud
+//     Platform service account.
 //
 // # Pagination
 //

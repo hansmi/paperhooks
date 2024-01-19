@@ -34,6 +34,14 @@ func RegisterClient(g FlagGroup, f *client.Flags) {
 		PlaceHolder("PATH").
 		Envar("PAPERLESS_AUTH_PASSWORD_FILE").StringVar(&f.AuthPasswordFile)
 
+	g.Flag("paperless_auth_gcp_service_account_key_file", "Authenticate using OpenID Connect (OIDC) ID tokens derived from a Google Cloud Platform service account key file.").
+		PlaceHolder("PATH").
+		Envar("PAPERLESS_AUTH_GCP_SERVICE_ACCOUNT_KEY_FILE").StringVar(&f.AuthGCPServiceAccountKeyFile)
+
+	g.Flag("paperless_auth_oidc_id_token_audience", "Target audience for OpenID Connect (OIDC) ID tokens. Defaults to the base URL.").
+		PlaceHolder("STRING").
+		Envar("PAPERLESS_AUTH_OIDC_ID_TOKEN_AUDIENCE").StringVar(&f.AuthOIDCIDTokenAudience)
+
 	kpflagvalue.HTTPHeaderVar(
 		g.Flag("paperless_header", "HTTP headers to set on all requests to Paperless.").
 			PlaceHolder("KEY:VALUE").

@@ -3,7 +3,7 @@ package client
 import "github.com/go-resty/resty/v2"
 
 type AuthMechanism interface {
-	authenticate(*resty.Client)
+	authenticate(Options, *resty.Client)
 }
 
 // Paperless authentication token.
@@ -13,7 +13,7 @@ type TokenAuth struct {
 
 var _ AuthMechanism = (*TokenAuth)(nil)
 
-func (t *TokenAuth) authenticate(c *resty.Client) {
+func (t *TokenAuth) authenticate(_ Options, c *resty.Client) {
 	c.SetAuthScheme("Token")
 	c.SetAuthToken(t.Token)
 }
@@ -26,6 +26,6 @@ type UsernamePasswordAuth struct {
 
 var _ AuthMechanism = (*UsernamePasswordAuth)(nil)
 
-func (a *UsernamePasswordAuth) authenticate(c *resty.Client) {
+func (a *UsernamePasswordAuth) authenticate(_ Options, c *resty.Client) {
 	c.SetBasicAuth(a.Username, a.Password)
 }

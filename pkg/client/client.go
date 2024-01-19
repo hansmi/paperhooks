@@ -68,7 +68,7 @@ func New(opts Options) *Client {
 		SetRedirectPolicy(resty.NoRedirectPolicy())
 
 	if opts.Auth != nil {
-		opts.Auth.authenticate(r)
+		opts.Auth.authenticate(opts, r)
 	}
 
 	if opts.transport != nil {
