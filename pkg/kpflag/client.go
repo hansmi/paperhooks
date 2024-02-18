@@ -16,6 +16,10 @@ func RegisterClient(g FlagGroup, f *client.Flags) {
 		PlaceHolder("URL").
 		StringVar(&f.BaseURL)
 
+	b.flag("paperless_max_concurrent_requests", "Number of requests allowed to be in flight at the same time. Defaults to zero (disabled).").
+		PlaceHolder("NUM").
+		IntVar(&f.MaxConcurrentRequests)
+
 	b.flag("paperless_auth_token", "Authentication token for Paperless. Reading the token from a file is preferrable.").
 		PlaceHolder("TOKEN").
 		StringVar(&f.AuthToken)

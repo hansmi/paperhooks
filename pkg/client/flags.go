@@ -29,6 +29,9 @@ type Flags struct {
 	// HTTP(S) URL for Paperless.
 	BaseURL string
 
+	// Number of concurrent requests allowed to be in flight.
+	MaxConcurrentRequests int
+
 	// Authenticate via token.
 	AuthToken string
 
@@ -113,10 +116,11 @@ func (f *Flags) BuildOptions() (*Options, error) {
 	}
 
 	opts := &Options{
-		BaseURL:        f.BaseURL,
-		DebugMode:      f.DebugMode,
-		Header:         http.Header{},
-		ServerLocation: time.Local,
+		BaseURL:               f.BaseURL,
+		MaxConcurrentRequests: f.MaxConcurrentRequests,
+		DebugMode:             f.DebugMode,
+		Header:                http.Header{},
+		ServerLocation:        time.Local,
 	}
 
 	for name, values := range f.Header {

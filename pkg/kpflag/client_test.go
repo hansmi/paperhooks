@@ -84,6 +84,15 @@ func TestRegisterClient(t *testing.T) {
 				ServerTimezone: "Australia/Sydney",
 			},
 		},
+		{
+			name: "max concurrent requests",
+			args: []string{
+				"--paperless_max_concurrent_requests=123",
+			},
+			want: client.Flags{
+				MaxConcurrentRequests: 123,
+			},
+		},
 	} {
 		flagParseTest{
 			name: tc.name,

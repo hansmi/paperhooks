@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/hansmi/paperhooks/internal/httptransport"
 )
 
 // Options for constructing a Paperless client.
@@ -31,6 +32,10 @@ type Options struct {
 	// Server's timezone for parsing timestamps without explicit offset.
 	// Defaults to [time.Local].
 	ServerLocation *time.Location
+
+	// Number of concurrent requests allowed to be in flight. Defaults to zero
+	// (no limitation).
+	MaxConcurrentRequests int
 
 	// Override the default HTTP transport.
 	transport http.RoundTripper
@@ -74,6 +79,8 @@ func New(opts Options) *Client {
 	if opts.Auth != nil {
 		opts.Auth.authenticate(opts, r)
 	}
+
+	r.SetTransport(httptransport.LimitConcurrent(r.GetClient().Transport, opts.MaxConcurrentRequests))
 
 	if len(opts.Header) > 0 {
 		r.SetPreRequestHook(func(_ *resty.Client, req *http.Request) error {
