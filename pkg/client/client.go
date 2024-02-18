@@ -67,12 +67,12 @@ func New(opts Options) *Client {
 		SetHeader("Accept", "application/json; version=2").
 		SetRedirectPolicy(resty.NoRedirectPolicy())
 
-	if opts.Auth != nil {
-		opts.Auth.authenticate(opts, r)
-	}
-
 	if opts.transport != nil {
 		r.SetTransport(opts.transport)
+	}
+
+	if opts.Auth != nil {
+		opts.Auth.authenticate(opts, r)
 	}
 
 	if len(opts.Header) > 0 {
