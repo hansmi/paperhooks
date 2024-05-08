@@ -106,6 +106,7 @@ func TestUploadDocument(t *testing.T) {
 				Created:             time.Date(2020, time.December, 31, 1, 2, 3, 0, time.UTC),
 				Correspondent:       Int64(100),
 				DocumentType:        Int64(200),
+				StoragePath:         Int64(500),
 				Tags:                []int64{300, 301, 302},
 				ArchiveSerialNumber: Int64(400),
 			},

@@ -117,6 +117,9 @@ type DocumentUploadOptions struct {
 	// ID of a document type for the document.
 	DocumentType *int64 `url:"document_type,omitempty"`
 
+	// ID of a storage path for the document.
+	StoragePath *int64 `url:"storage_path,omitempty"`
+
 	// Tag IDs for the document.
 	Tags []int64 `url:"tags,omitempty"`
 
