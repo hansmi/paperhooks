@@ -10,6 +10,8 @@ import (
 	"github.com/hansmi/paperhooks/internal/httptransport"
 )
 
+const ItemCountUnknown = -1
+
 // Options for constructing a Paperless client.
 type Options struct {
 	// Paperless URL. May include a path.
@@ -109,6 +111,10 @@ func (c *Client) newRequest(ctx context.Context) *resty.Request {
 type Response struct {
 	*http.Response
 
+	// Expected number of items after filtering and across all pages (if
+	// paginated). Set to [ItemCountUnknown] if the value isn't available.
+	ItemCount int64
+
 	// Token for fetching next page in paginated result sets.
 	NextPage *PageToken
 
@@ -121,5 +127,8 @@ func wrapResponse(r *resty.Response) *Response {
 		return nil
 	}
 
-	return &Response{Response: r.RawResponse}
+	return &Response{
+		Response:  r.RawResponse,
+		ItemCount: ItemCountUnknown,
+	}
 }

@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -13,7 +14,7 @@ import (
 
 type listResult[T any] struct {
 	// Total item count.
-	Count int64 `json:"count"`
+	Count *json.Number `json:"count"`
 
 	// URL for next page (if any).
 	Next string `json:"next"`
@@ -66,6 +67,12 @@ func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts O) ([]T,
 	results := resp.Result().(*listResult[T])
 
 	w := wrapResponse(resp)
+
+	if results.Count != nil {
+		if w.ItemCount, err = results.Count.Int64(); err != nil {
+			return nil, nil, fmt.Errorf("parsing item count: %w", err)
+		}
+	}
 
 	if w.NextPage, err = pageTokenFromURL(results.Next); err != nil {
 		return nil, nil, err

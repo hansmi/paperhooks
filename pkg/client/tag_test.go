@@ -29,11 +29,12 @@ func TestTagFieldsAsMap(t *testing.T) {
 
 func TestListTags(t *testing.T) {
 	for _, tc := range []struct {
-		name    string
-		setup   func(*testing.T, *httpmock.MockTransport)
-		opts    ListTagsOptions
-		wantErr error
-		want    []Tag
+		name      string
+		setup     func(*testing.T, *httpmock.MockTransport)
+		opts      ListTagsOptions
+		wantErr   error
+		want      []Tag
+		wantCount int64
 	}{
 		{
 			name: "empty",
@@ -41,6 +42,7 @@ func TestListTags(t *testing.T) {
 				transport.RegisterResponder(http.MethodGet, "/api/tags/",
 					httpmock.NewStringResponder(http.StatusOK, `{}`))
 			},
+			wantCount: ItemCountUnknown,
 		},
 		{
 			name: "bad JSON",
@@ -55,6 +57,7 @@ func TestListTags(t *testing.T) {
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterResponder(http.MethodGet, "/api/tags/",
 					httpmock.NewStringResponder(http.StatusOK, `{
+						"count": 2,
 						"results": [
 							{ "id": 100, "name": "first" },
 							{ "id": 200, "name": "second" }
@@ -65,6 +68,7 @@ func TestListTags(t *testing.T) {
 				{ID: 100, Name: "first"},
 				{ID: 200, Name: "second"},
 			},
+			wantCount: 2,
 		},
 		{
 			name: "options",
@@ -72,6 +76,7 @@ func TestListTags(t *testing.T) {
 				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
 					"ordering=name&name__istartswith=hello&page=1&page_size=25&owner__isnull=false",
 					httpmock.NewStringResponder(http.StatusOK, `{
+						"count": "123",
 						"results": [
 							{ "id": 400, "name": "four" },
 							{ "id": 500, "name": "five" }
@@ -93,6 +98,7 @@ func TestListTags(t *testing.T) {
 				{ID: 400, Name: "four"},
 				{ID: 500, Name: "five"},
 			},
+			wantCount: 123,
 		},
 		{
 			name: "third page",
@@ -100,6 +106,7 @@ func TestListTags(t *testing.T) {
 				transport.RegisterResponderWithQuery(http.MethodGet, "/api/tags/",
 					"page=3&page_size=25",
 					httpmock.NewStringResponder(http.StatusOK, `{
+						"count": 10,
 						"results": [
 							{ "id": 300, "name": "third" }
 						]
@@ -113,6 +120,7 @@ func TestListTags(t *testing.T) {
 			want: []Tag{
 				{ID: 300, Name: "third"},
 			},
+			wantCount: 10,
 		},
 		{
 			name: "first page not found",
@@ -138,6 +146,7 @@ func TestListTags(t *testing.T) {
 					Page: &PageToken{number: 3},
 				},
 			},
+			wantCount: ItemCountUnknown,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -149,7 +158,7 @@ func TestListTags(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.ListTags(context.Background(), tc.opts)
+			got, resp, err := c.ListTags(context.Background(), tc.opts)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("ListTags() error diff (-want +got):\n%s", diff)
@@ -158,6 +167,10 @@ func TestListTags(t *testing.T) {
 			if err == nil {
 				if diff := cmp.Diff(tc.want, got, cmpopts.EquateEmpty()); diff != "" {
 					t.Errorf("ListTags() diff (-want +got):\n%s", diff)
+				}
+
+				if diff := cmp.Diff(tc.wantCount, resp.ItemCount); diff != "" {
+					t.Errorf("ListTags() item count diff (-want +got):\n%s", diff)
 				}
 			}
 		})
