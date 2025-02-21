@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-//go:generate stringer -linecomment -type=TaskStatus -trimprefix=Task -output=task_string.go
+//go:generate go run golang.org/x/tools/cmd/stringer -linecomment -type=TaskStatus -trimprefix=Task -output=task_string.go
 type TaskStatus int
 
 // Celery task states
