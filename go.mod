@@ -15,7 +15,11 @@ require (
 	github.com/kr/pretty v0.3.1
 	go.uber.org/multierr v1.11.0
 	golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611
+<<<<<<< HEAD
 	golang.org/x/oauth2 v0.26.0
+=======
+	golang.org/x/oauth2 v0.25.0
+>>>>>>> 6995073 (Make `go generate ./...` work, without installing global tooling)
 	golang.org/x/sync v0.11.0
 	golang.org/x/tools v0.30.0
 )
