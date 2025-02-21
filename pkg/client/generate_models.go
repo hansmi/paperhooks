@@ -226,6 +226,14 @@ var groupModel = model{
 	},
 }
 
+var remoteVersionModel = model{
+	name: "remoteVersion",
+	fields: []modelField{
+		{name: "version", typ: "string", readOnly: true},
+		{name: "update_available", typ: "bool", readOnly: true},
+	},
+}
+
 func main() {
 	outputFile := flag.String("output", "", "Destination file")
 
@@ -263,6 +271,7 @@ func main() {
 		tagModel,
 		userModel,
 		groupModel,
+		remoteVersionModel,
 	}
 
 	sort.Slice(models, func(a, b int) bool {

@@ -1,6 +1,6 @@
 package client
 
-//go:generate stringer -type=MatchingAlgorithm -output=matching_string.go
+//go:generate go run golang.org/x/tools/cmd/stringer -type=MatchingAlgorithm -output=matching_string.go
 type MatchingAlgorithm int
 
 const (
