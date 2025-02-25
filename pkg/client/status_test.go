@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -51,8 +52,8 @@ func TestGetStatus(t *testing.T) {
 							"status": "OK",
 							"error": null,
 							"migration_status": {
-							"latest_migration": "mfa.0003_authenticator_type_uniq",
-							"unapplied_migrations": []
+								"latest_migration": "mfa.0003_authenticator_type_uniq",
+								"unapplied_migrations": []
 							}
 						},
 						"tasks": {
@@ -90,14 +91,11 @@ func TestGetStatus(t *testing.T) {
 				Tasks: SystemStatusTasks{
 					RedisURL:              "redis://localhost:6379",
 					RedisStatus:           "OK",
-					RedisError:            "",
 					CeleryStatus:          "OK",
 					IndexStatus:           "OK",
-					IndexLastModified:     "2025-02-21T00:01:54.773392Z",
-					IndexError:            "",
+					IndexLastModified:     time.Date(2025, time.February, 21, 0, 1, 54, 773392000, time.UTC),
 					ClassifierStatus:      "OK",
-					ClassifierLastTrained: "2025-02-21T20:05:01.589548Z",
-					ClassifierError:       "",
+					ClassifierLastTrained: time.Date(2025, time.February, 21, 20, 5, 1, 589548000, time.UTC),
 				},
 			},
 		},
