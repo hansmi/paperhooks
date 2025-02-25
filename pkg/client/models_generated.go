@@ -345,21 +345,6 @@ func (f *GroupFields) SetName(name string) *GroupFields {
 	return f
 }
 
-type RemoteVersion struct {
-	Version         string `json:"version"`
-	UpdateAvailable bool   `json:"update_available"`
-}
-
-type RemoteVersionFields struct {
-	objectFields
-}
-
-var _ json.Marshaler = (*RemoteVersionFields)(nil)
-
-func NewRemoteVersionFields() *RemoteVersionFields {
-	return &RemoteVersionFields{objectFields{}}
-}
-
 type StoragePath struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
