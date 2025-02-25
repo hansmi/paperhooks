@@ -15,7 +15,7 @@ func TestGetStatus(t *testing.T) {
 		name    string
 		setup   func(*testing.T, *httpmock.MockTransport)
 		wantErr error
-		want    *Status
+		want    *SystemStatus
 	}{
 		{
 			name: "empty",
@@ -23,7 +23,7 @@ func TestGetStatus(t *testing.T) {
 				transport.RegisterResponder(http.MethodGet, "/api/status/",
 					httpmock.NewStringResponder(http.StatusOK, `{}`))
 			},
-			want: &Status{},
+			want: &SystemStatus{},
 		},
 		{
 			name: "bad JSON",
@@ -69,25 +69,25 @@ func TestGetStatus(t *testing.T) {
 						}
 						}`))
 			},
-			want: &Status{
+			want: &SystemStatus{
 				PNGXVersion: "2.14.7",
 				ServerOS:    "Linux-6.8.12-8-pve-x86_64-with-glibc2.36",
 				InstallType: "bare-metal",
-				Storage: StorageStatus{
+				Storage: SystemStatusStorage{
 					Total:     21474836480,
 					Available: 13406437376,
 				},
-				Database: DatabaseStatus{
+				Database: SystemStatusDatabase{
 					Type:   "postgresql",
 					URL:    "paperlessdb",
 					Status: "OK",
 					Error:  "",
-					MigrationStatus: DatabaseMigrationStatus{
+					MigrationStatus: SystemStatusDatabaseMigration{
 						LatestMigration:     "mfa.0003_authenticator_type_uniq",
 						UnappliedMigrations: []string{},
 					},
 				},
-				Tasks: TasksStatus{
+				Tasks: SystemStatusTasks{
 					RedisURL:              "redis://localhost:6379",
 					RedisStatus:           "OK",
 					RedisError:            "",
