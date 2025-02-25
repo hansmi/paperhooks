@@ -4,6 +4,11 @@ import (
 	"context"
 )
 
+type RemoteVersion struct {
+	Version         string `json:"version"`
+	UpdateAvailable bool   `json:"update_available"`
+}
+
 func (c *Client) GetRemoteVersion(ctx context.Context) (*RemoteVersion, *Response, error) {
 	resp, err := c.newRequest(ctx).
 		SetResult(&RemoteVersion{}).
