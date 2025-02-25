@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"time"
 )
 
 type SystemStatus struct {
@@ -32,16 +33,16 @@ type SystemStatusDatabaseMigration struct {
 }
 
 type SystemStatusTasks struct {
-	RedisURL              string `json:"redis_url"`
-	RedisStatus           string `json:"redis_status"`
-	RedisError            string `json:"redis_error"`
-	CeleryStatus          string `json:"celery_status"`
-	IndexStatus           string `json:"index_status"`
-	IndexLastModified     string `json:"index_last_modified"`
-	IndexError            string `json:"index_error"`
-	ClassifierStatus      string `json:"classifier_status"`
-	ClassifierLastTrained string `json:"classifier_last_trained"`
-	ClassifierError       string `json:"classifier_error"`
+	RedisURL              string    `json:"redis_url"`
+	RedisStatus           string    `json:"redis_status"`
+	RedisError            string    `json:"redis_error"`
+	CeleryStatus          string    `json:"celery_status"`
+	IndexStatus           string    `json:"index_status"`
+	IndexLastModified     time.Time `json:"index_last_modified"`
+	IndexError            string    `json:"index_error"`
+	ClassifierStatus      string    `json:"classifier_status"`
+	ClassifierLastTrained time.Time `json:"classifier_last_trained"`
+	ClassifierError       string    `json:"classifier_error"`
 }
 
 func (c *Client) GetStatus(ctx context.Context) (*SystemStatus, *Response, error) {
