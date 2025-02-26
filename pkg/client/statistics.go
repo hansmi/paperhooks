@@ -2,6 +2,20 @@ package client
 
 import "context"
 
+type Statistics struct {
+	DocumentsTotal         int64              `json:"documents_total"`
+	DocumentsInbox         int64              `json:"documents_inbox"`
+	InboxTag               int64              `json:"inbox_tag"`
+	InboxTags              []int64            `json:"inbox_tags"`
+	DocumentFileTypeCounts []DocumentFileType `json:"document_file_type_counts"`
+	CharacterCount         int64              `json:"character_count"`
+	TagCount               int64              `json:"tag_count"`
+	CorrespondentCount     int64              `json:"correspondent_count"`
+	DocumentTypeCount      int64              `json:"document_type_count"`
+	StoragePathCount       int64              `json:"storage_path_count"`
+	CurrentAsn             int64              `json:"current_asn"`
+}
+
 type DocumentFileType struct {
 	MimeType      string `json:"mime_type"`
 	MimeTypeCount int64  `json:"mime_type_count"`

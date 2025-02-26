@@ -226,23 +226,6 @@ var groupModel = model{
 	},
 }
 
-var statisticsModel = model{
-	name: "statistics",
-	fields: []modelField{
-		{name: "documents_total", typ: "int64", readOnly: true},
-		{name: "documents_inbox", typ: "int64", readOnly: true},
-		{name: "inbox_tag", typ: "int64", readOnly: true},
-		{name: "inbox_tags", typ: "[]int64", readOnly: true},
-		{name: "document_file_type_counts", typ: "[]DocumentFileType", readOnly: true},
-		{name: "character_count", typ: "int64", readOnly: true},
-		{name: "tag_count", typ: "int64", readOnly: true},
-		{name: "correspondent_count", typ: "int64", readOnly: true},
-		{name: "document_type_count", typ: "int64", readOnly: true},
-		{name: "storage_path_count", typ: "int64", readOnly: true},
-		{name: "current_asn", typ: "int64", readOnly: true},
-	},
-}
-
 func main() {
 	outputFile := flag.String("output", "", "Destination file")
 
@@ -280,7 +263,6 @@ func main() {
 		tagModel,
 		userModel,
 		groupModel,
-		statisticsModel,
 	}
 
 	sort.Slice(models, func(a, b int) bool {
