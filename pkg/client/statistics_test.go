@@ -67,7 +67,7 @@ func TestGetStatistics(t *testing.T) {
 				DocumentsInbox: 273,
 				InboxTag:       1,
 				InboxTags:      []int64{1},
-				DocumentFileTypeCounts: []DocumentFileType{
+				DocumentFileTypeCounts: []StatisticsDocumentFileType{
 					{
 						MimeType:      "application/pdf",
 						MimeTypeCount: 1397,
