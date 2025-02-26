@@ -345,30 +345,6 @@ func (f *GroupFields) SetName(name string) *GroupFields {
 	return f
 }
 
-type Statistics struct {
-	DocumentsTotal         int64              `json:"documents_total"`
-	DocumentsInbox         int64              `json:"documents_inbox"`
-	InboxTag               int64              `json:"inbox_tag"`
-	InboxTags              []int64            `json:"inbox_tags"`
-	DocumentFileTypeCounts []DocumentFileType `json:"document_file_type_counts"`
-	CharacterCount         int64              `json:"character_count"`
-	TagCount               int64              `json:"tag_count"`
-	CorrespondentCount     int64              `json:"correspondent_count"`
-	DocumentTypeCount      int64              `json:"document_type_count"`
-	StoragePathCount       int64              `json:"storage_path_count"`
-	CurrentAsn             int64              `json:"current_asn"`
-}
-
-type StatisticsFields struct {
-	objectFields
-}
-
-var _ json.Marshaler = (*StatisticsFields)(nil)
-
-func NewStatisticsFields() *StatisticsFields {
-	return &StatisticsFields{objectFields{}}
-}
-
 type StoragePath struct {
 	ID                int64             `json:"id"`
 	Slug              string            `json:"slug"`
