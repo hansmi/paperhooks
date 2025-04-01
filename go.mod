@@ -1,7 +1,7 @@
 module github.com/hansmi/paperhooks
 
 go 1.22.0
-toolchain go1.24.0
+toolchain go1.24.1
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
@@ -15,7 +15,7 @@ require (
 	go.uber.org/multierr v1.11.0
 	golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611
 	golang.org/x/oauth2 v0.27.0
-	golang.org/x/sync v0.11.0
+	golang.org/x/sync v0.12.0
 	golang.org/x/tools v0.30.0
 )
 
