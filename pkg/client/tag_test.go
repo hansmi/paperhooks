@@ -410,7 +410,7 @@ func TestCreateTag(t *testing.T) {
 			},
 			wantErr: &RequestError{
 				StatusCode: http.StatusOK,
-				Message:    "unexpected status 200",
+				Message:    "unexpected status 200 OK",
 			},
 		},
 	} {

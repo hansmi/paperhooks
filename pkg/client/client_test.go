@@ -75,7 +75,7 @@ func TestClient(t *testing.T) {
 			},
 			wantErr: &RequestError{
 				StatusCode: http.StatusSeeOther,
-				Message:    "303",
+				Message:    "303 See Other",
 			},
 		},
 		{

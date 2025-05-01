@@ -48,7 +48,7 @@ func TestDownload(t *testing.T) {
 			url: "/report/error",
 			wantErr: &RequestError{
 				StatusCode: http.StatusTeapot,
-				Message:    `418`,
+				Message:    `418 I'm a teapot`,
 			},
 		},
 		{
