@@ -2,6 +2,8 @@ package client
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"log"
 	"net/http"
 	"time"
@@ -38,6 +40,11 @@ type Options struct {
 	// Number of concurrent requests allowed to be in flight. Defaults to zero
 	// (no limitation).
 	MaxConcurrentRequests int
+
+	// TrustedRootCAs defines the set of certificate authorities the client
+	// uses when verifying server certificates. If nil the system's default
+	// certificate pool is used.
+	TrustedRootCAs *x509.CertPool
 
 	// Override the default HTTP transport.
 	transport http.RoundTripper
@@ -79,7 +86,31 @@ func New(opts Options) *Client {
 	}
 
 	if opts.Auth != nil {
+		// Authentication may use or modify the transport (e.g. OAuth), so it
+		// must be set up before applying limitations specific to the Paperless
+		// API.
 		opts.Auth.authenticate(opts, r)
+	}
+
+	if opts.TrustedRootCAs != nil {
+		// TODO: Resty v3 has Client.TLSClientConfig and
+		// Client.SetTLSClientConfig functions.
+		transport, err := r.Transport()
+		if err != nil {
+			// Happens when the transport is not an *http.Transport instance.
+			panic(err)
+		}
+
+		tlsConfig := transport.TLSClientConfig
+
+		if tlsConfig == nil {
+			tlsConfig = &tls.Config{}
+			transport.TLSClientConfig = tlsConfig
+		}
+
+		tlsConfig.RootCAs = opts.TrustedRootCAs
+
+		r.SetTransport(transport)
 	}
 
 	r.SetTransport(httptransport.LimitConcurrent(r.GetClient().Transport, opts.MaxConcurrentRequests))

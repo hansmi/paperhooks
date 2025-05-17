@@ -2,7 +2,12 @@ package client
 
 import (
 	"context"
+	"crypto/x509"
+	"errors"
+	"io"
+	"log"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/go-resty/resty/v2"
@@ -101,6 +106,58 @@ func TestClient(t *testing.T) {
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("Ping() error diff (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
+
+func TestClientWithTLS(t *testing.T) {
+	for _, tc := range []struct {
+		name  string
+		trust bool
+		opts  Options
+	}{
+		{
+			name:  "trusted",
+			trust: true,
+		},
+		{
+			name: "untrusted",
+		},
+		{
+			name:  "max concurrent",
+			trust: true,
+			opts: Options{
+				MaxConcurrentRequests: 100,
+			},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			srv := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			}))
+			t.Cleanup(srv.Close)
+
+			srv.Config.ErrorLog = log.New(io.Discard, "", 0)
+			srv.StartTLS()
+
+			opts := tc.opts
+			opts.BaseURL = srv.URL
+			opts.TrustedRootCAs = x509.NewCertPool()
+
+			if tc.trust {
+				opts.TrustedRootCAs.AddCert(srv.Certificate())
+			}
+
+			err := New(opts).Ping(t.Context())
+
+			if !tc.trust {
+				var caErr x509.UnknownAuthorityError
+
+				if err == nil || !errors.As(err, &caErr) {
+					t.Errorf("Ping() should report bad X.509 CA, got: %v", err)
+				}
+			} else if err != nil {
+				t.Errorf("Ping() failed: %v", err)
 			}
 		})
 	}

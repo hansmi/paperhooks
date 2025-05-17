@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"crypto/x509"
 	"errors"
 	"fmt"
 	"net/http"
@@ -28,6 +29,11 @@ type Flags struct {
 
 	// HTTP(S) URL for Paperless.
 	BaseURL string
+
+	// Read the set of PEM-formatted X.509 certificate authorities the client
+	// uses when verifying server certificates from files. If empty the
+	// system's default trust store is used.
+	TrustedRootCAFiles []string
 
 	// Number of concurrent requests allowed to be in flight.
 	MaxConcurrentRequests int
@@ -58,6 +64,25 @@ type Flags struct {
 
 	// Timezone for parsing timestamps without offset.
 	ServerTimezone string
+}
+
+func (f *Flags) buildTrustedRootCAPool() (*x509.CertPool, error) {
+	if len(f.TrustedRootCAFiles) == 0 {
+		return nil, nil
+	}
+
+	pool := x509.NewCertPool()
+
+	for _, path := range f.TrustedRootCAFiles {
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return nil, err
+		}
+
+		pool.AppendCertsFromPEM(content)
+	}
+
+	return pool, nil
 }
 
 // This function makes no attempt to deconflict different authentication
@@ -121,6 +146,12 @@ func (f *Flags) BuildOptions() (*Options, error) {
 		DebugMode:             f.DebugMode,
 		Header:                http.Header{},
 		ServerLocation:        time.Local,
+	}
+
+	if pool, err := f.buildTrustedRootCAPool(); err != nil {
+		return nil, fmt.Errorf("trusted root CAs: %w", err)
+	} else {
+		opts.TrustedRootCAs = pool
 	}
 
 	for name, values := range f.Header {

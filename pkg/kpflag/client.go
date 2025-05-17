@@ -16,6 +16,10 @@ func RegisterClient(g FlagGroup, f *client.Flags) {
 		PlaceHolder("URL").
 		StringVar(&f.BaseURL)
 
+	b.flag("paperless_trusted_ca_file", "Read X.509 certificate authorities (CA) to verify the server from file. May contain multiple certificates and must be PEM-encoded.").
+		PlaceHolder("FILE").
+		StringsVar(&f.TrustedRootCAFiles)
+
 	b.flag("paperless_max_concurrent_requests", "Number of requests allowed to be in flight at the same time. Defaults to zero (disabled).").
 		PlaceHolder("NUM").
 		IntVar(&f.MaxConcurrentRequests)
