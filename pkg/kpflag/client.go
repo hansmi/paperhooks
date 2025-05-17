@@ -20,7 +20,7 @@ func RegisterClient(g FlagGroup, f *client.Flags) {
 		PlaceHolder("NUM").
 		IntVar(&f.MaxConcurrentRequests)
 
-	b.flag("paperless_auth_token", "Authentication token for Paperless. Reading the token from a file is preferrable.").
+	b.flag("paperless_auth_token", "Authentication token for Paperless. Reading the token from a file is preferable.").
 		PlaceHolder("TOKEN").
 		StringVar(&f.AuthToken)
 
@@ -32,7 +32,7 @@ func RegisterClient(g FlagGroup, f *client.Flags) {
 		PlaceHolder("NAME").
 		StringVar(&f.AuthUsername)
 
-	b.flag("paperless_auth_password", "Password for HTTP basic authentication. Reading the password from a file is preferrable.").
+	b.flag("paperless_auth_password", "Password for HTTP basic authentication. Reading the password from a file is preferable.").
 		PlaceHolder("PASSWORD").
 		StringVar(&f.AuthPassword)
 
