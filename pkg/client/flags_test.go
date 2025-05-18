@@ -1,6 +1,7 @@
 package client
 
 import (
+	"crypto/x509"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -107,6 +108,44 @@ func TestFlagsBuild(t *testing.T) {
 				BaseURL:        "http://localhost/timezone",
 				ServerLocation: time.UTC,
 			},
+		},
+		{
+			name: "trusted CA empty",
+			flags: Flags{
+				BaseURL: "http://localhost/rootca/empty",
+				TrustedRootCAFiles: []string{
+					testutil.MustWriteFile(t, filepath.Join(t.TempDir(), "file.txt"), ""),
+				},
+			},
+			want: Options{
+				BaseURL:        "http://localhost/rootca/empty",
+				ServerLocation: time.Local,
+				TrustedRootCAs: x509.NewCertPool(),
+			},
+		},
+		{
+			name: "trusted CA",
+			flags: Flags{
+				BaseURL: "http://localhost/rootca",
+				TrustedRootCAFiles: []string{
+					testutil.MustWriteFile(t, filepath.Join(t.TempDir(), "file.txt"), fakeCertPEM),
+				},
+			},
+			want: Options{
+				BaseURL:        "http://localhost/rootca",
+				ServerLocation: time.Local,
+				TrustedRootCAs: newFakeCertPool(t),
+			},
+		},
+		{
+			name: "trusted CA file not found",
+			flags: Flags{
+				BaseURL: "http://localhost/rootca/notfound",
+				TrustedRootCAFiles: []string{
+					filepath.Join(t.TempDir(), "missing"),
+				},
+			},
+			wantErr: os.ErrNotExist,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
