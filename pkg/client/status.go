@@ -37,12 +37,17 @@ type SystemStatusTasks struct {
 	RedisStatus           string    `json:"redis_status"`
 	RedisError            string    `json:"redis_error"`
 	CeleryStatus          string    `json:"celery_status"`
+	CeleryURL             string    `json:"celery_url"`
+	CeleryError           string    `json:"celery_error"`
 	IndexStatus           string    `json:"index_status"`
 	IndexLastModified     time.Time `json:"index_last_modified"`
 	IndexError            string    `json:"index_error"`
 	ClassifierStatus      string    `json:"classifier_status"`
 	ClassifierLastTrained time.Time `json:"classifier_last_trained"`
 	ClassifierError       string    `json:"classifier_error"`
+	SanityCheckStatus     string    `json:"sanity_check_status"`
+	SanityCheckLastRun    time.Time `json:"sanity_check_last_run"`
+	SanityCheckError      string    `json:"sanity_check_error"`
 }
 
 func (c *Client) GetStatus(ctx context.Context) (*SystemStatus, *Response, error) {
