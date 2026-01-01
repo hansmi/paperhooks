@@ -9,7 +9,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/go-resty/resty/v2 v2.17.1
 	github.com/google/go-cmp v0.7.0
-	github.com/google/go-querystring v1.1.0
+	github.com/google/go-querystring v1.2.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/jarcoal/httpmock v1.4.1
 	github.com/kr/pretty v0.3.1
