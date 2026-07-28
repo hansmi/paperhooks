@@ -30,6 +30,20 @@ type crudOptions struct {
 	base       string
 	getID      func(any) int64
 	setPage    func(any, *PageToken)
+
+	// postProcess is invoked with a pointer to every decoded item, e.g. for
+	// normalizations requiring client state.
+	postProcess func(any)
+}
+
+func applyPostProcess[T any](opts crudOptions, rawResult any) *T {
+	result := rawResult.(*T)
+
+	if opts.postProcess != nil {
+		opts.postProcess(result)
+	}
+
+	return result
 }
 
 func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts O) ([]T, *Response, error) {
@@ -65,6 +79,12 @@ func crudList[T, O any](ctx context.Context, opts crudOptions, listOpts O) ([]T,
 	}
 
 	results := resp.Result().(*listResult[T])
+
+	if opts.postProcess != nil {
+		for i := range results.Items {
+			opts.postProcess(&results.Items[i])
+		}
+	}
 
 	w := wrapResponse(resp)
 
@@ -150,7 +170,7 @@ func crudGet[T any](ctx context.Context, opts crudOptions, id int64) (*T, *Respo
 		return nil, wrapResponse(resp), err
 	}
 
-	return resp.Result().(*T), wrapResponse(resp), nil
+	return applyPostProcess[T](opts, resp.Result()), wrapResponse(resp), nil
 }
 
 func crudCreate[T any](ctx context.Context, opts crudOptions, data any) (*T, *Response, error) {
@@ -162,7 +182,7 @@ func crudCreate[T any](ctx context.Context, opts crudOptions, data any) (*T, *Re
 	err = convertError(err, resp)
 
 	if detail, ok := err.(*RequestError); ok && detail.StatusCode == http.StatusCreated {
-		return resp.Result().(*T), wrapResponse(resp), nil
+		return applyPostProcess[T](opts, resp.Result()), wrapResponse(resp), nil
 	}
 
 	if err == nil {
@@ -185,7 +205,7 @@ func crudUpdate[T any](ctx context.Context, opts crudOptions, id int64, data *T)
 		return nil, wrapResponse(resp), err
 	}
 
-	return resp.Result().(*T), wrapResponse(resp), nil
+	return applyPostProcess[T](opts, resp.Result()), wrapResponse(resp), nil
 }
 
 func crudPatch[T any](ctx context.Context, opts crudOptions, id int64, data any) (*T, *Response, error) {
@@ -198,7 +218,7 @@ func crudPatch[T any](ctx context.Context, opts crudOptions, id int64, data any)
 		return nil, wrapResponse(resp), err
 	}
 
-	return resp.Result().(*T), wrapResponse(resp), nil
+	return applyPostProcess[T](opts, resp.Result()), wrapResponse(resp), nil
 }
 
 func crudDelete[T any](ctx context.Context, opts crudOptions, id int64) (*Response, error) {
