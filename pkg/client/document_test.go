@@ -13,6 +13,89 @@ import (
 	"github.com/jarcoal/httpmock"
 )
 
+func TestGetDocument(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		setup   func(*testing.T, *httpmock.MockTransport)
+		id      int64
+		want    *Document
+		wantErr error
+	}{
+		{
+			name: "created with datetime",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/api/documents/8127/",
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"id": 8127,
+						"title": "first",
+						"created": "2023-06-30T22:00:00Z"
+					}`))
+			},
+			id: 8127,
+			want: &Document{
+				ID:      8127,
+				Title:   "first",
+				Created: time.Date(2023, time.June, 30, 22, 0, 0, 0, time.UTC),
+			},
+		},
+		{
+			// Paperless REST API version 9 changed the "created" field to
+			// a date-only string.
+			name: "created with date only",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/api/documents/8128/",
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"id": 8128,
+						"title": "second",
+						"created": "2026-07-23",
+						"modified": "2026-07-23T08:09:10Z"
+					}`))
+			},
+			id: 8128,
+			want: &Document{
+				ID:       8128,
+				Title:    "second",
+				Created:  time.Date(2026, time.July, 23, 0, 0, 0, 0, time.UTC),
+				Modified: time.Date(2026, time.July, 23, 8, 9, 10, 0, time.UTC),
+			},
+		},
+		{
+			name: "invalid created",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/api/documents/8129/",
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"id": 8129,
+						"created": "not a timestamp"
+					}`))
+			},
+			id:      8129,
+			wantErr: cmpopts.AnyError,
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			transport := newMockTransport(t)
+
+			tc.setup(t, transport)
+
+			c := New(Options{
+				transport: transport,
+			})
+
+			got, _, err := c.GetDocument(context.Background(), tc.id)
+
+			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
+				t.Errorf("GetDocument() error diff (-want +got):\n%s", diff)
+			}
+
+			if err == nil {
+				if diff := cmp.Diff(tc.want, got, cmpopts.EquateEmpty()); diff != "" {
+					t.Errorf("GetDocument() result diff (-want +got):\n%s", diff)
+				}
+			}
+		})
+	}
+}
+
 func TestGetDocumentMetadata(t *testing.T) {
 	for _, tc := range []struct {
 		name    string

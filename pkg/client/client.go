@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -13,6 +14,11 @@ import (
 )
 
 const ItemCountUnknown = -1
+
+// DefaultAPIVersion is the Paperless REST API version requested unless
+// configured otherwise. Paperless-ngx 3.0 removed support for API versions
+// older than 9 (https://docs.paperless-ngx.com/api/#api-versioning).
+const DefaultAPIVersion = 9
 
 // Options for constructing a Paperless client.
 type Options struct {
@@ -32,6 +38,10 @@ type Options struct {
 
 	// HTTP headers to set on all requests.
 	Header http.Header
+
+	// Paperless REST API version requested via the "Accept" header. Defaults
+	// to [DefaultAPIVersion].
+	APIVersion int
 
 	// Server's timezone for parsing timestamps without explicit offset.
 	// Defaults to [time.Local].
@@ -70,6 +80,10 @@ func New(opts Options) *Client {
 		opts.ServerLocation = time.Local
 	}
 
+	if opts.APIVersion == 0 {
+		opts.APIVersion = DefaultAPIVersion
+	}
+
 	r := resty.New().
 		SetDebug(opts.DebugMode).
 		SetLogger(&prefixLogger{
@@ -78,7 +92,7 @@ func New(opts Options) *Client {
 		}).
 		SetDisableWarn(true).
 		SetBaseURL(opts.BaseURL).
-		SetHeader("Accept", "application/json; version=2").
+		SetHeader("Accept", fmt.Sprintf("application/json; version=%d", opts.APIVersion)).
 		SetRedirectPolicy(resty.NoRedirectPolicy())
 
 	if opts.transport != nil {

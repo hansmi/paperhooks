@@ -57,6 +57,10 @@ func RegisterClient(g FlagGroup, f *client.Flags) {
 			PlaceHolder("KEY:VALUE"),
 		&f.Header)
 
+	b.flag("paperless_api_version", fmt.Sprintf("Paperless REST API version requested via the \"Accept\" header. Defaults to %d.", client.DefaultAPIVersion)).
+		PlaceHolder("NUM").
+		IntVar(&f.APIVersion)
+
 	b.flag("paperless_server_timezone", fmt.Sprintf("Timezone for parsing timestamps. Defaults to %q.", time.Local.String())).
 		PlaceHolder("AREA/LOCATION").
 		StringVar(&f.ServerTimezone)
