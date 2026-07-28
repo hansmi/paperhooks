@@ -35,6 +35,17 @@ func TestClient(t *testing.T) {
 			name: "defaults",
 			setup: func(t *testing.T, transport *httpmock.MockTransport) {
 				transport.RegisterMatcherResponder(http.MethodGet, "/api/",
+					httpmock.HeaderIs("Accept", "application/json; version=9"),
+					httpmock.NewJsonResponderOrPanic(http.StatusOK, nil))
+			},
+		},
+		{
+			name: "explicit API version",
+			opts: Options{
+				APIVersion: 2,
+			},
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterMatcherResponder(http.MethodGet, "/api/",
 					httpmock.HeaderIs("Accept", "application/json; version=2"),
 					httpmock.NewJsonResponderOrPanic(http.StatusOK, nil))
 			},

@@ -62,6 +62,10 @@ type Flags struct {
 	// HTTP headers to set on all requests.
 	Header http.Header
 
+	// Paperless REST API version requested via the "Accept" header. Defaults
+	// to [DefaultAPIVersion].
+	APIVersion int
+
 	// Timezone for parsing timestamps without offset.
 	ServerTimezone string
 }
@@ -145,6 +149,7 @@ func (f *Flags) BuildOptions() (*Options, error) {
 		MaxConcurrentRequests: f.MaxConcurrentRequests,
 		DebugMode:             f.DebugMode,
 		Header:                http.Header{},
+		APIVersion:            f.APIVersion,
 		ServerLocation:        time.Local,
 	}
 

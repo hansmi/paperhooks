@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"path/filepath"
@@ -9,6 +10,52 @@ import (
 
 	"github.com/google/go-querystring/query"
 )
+
+// dateOrDateTime accepts timestamps both with and without a time component.
+// Paperless REST API version 9 changed the document "created" field from
+// a datetime to a date-only string.
+type dateOrDateTime struct {
+	time.Time
+}
+
+func (d *dateOrDateTime) UnmarshalJSON(data []byte) error {
+	origErr := d.Time.UnmarshalJSON(data)
+	if origErr == nil {
+		return nil
+	}
+
+	var s string
+
+	if json.Unmarshal(data, &s) == nil {
+		if parsed, err := time.ParseInLocation(time.DateOnly, s, time.UTC); err == nil {
+			d.Time = parsed
+			return nil
+		}
+	}
+
+	return origErr
+}
+
+var _ json.Unmarshaler = (*Document)(nil)
+
+func (d *Document) UnmarshalJSON(data []byte) error {
+	type plainDocument Document
+
+	aux := struct {
+		*plainDocument
+		Created dateOrDateTime `json:"created"`
+	}{
+		plainDocument: (*plainDocument)(d),
+	}
+
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+
+	d.Created = aux.Created.Time
+
+	return nil
+}
 
 type DocumentVersionMetadata struct {
 	Namespace string `json:"namespace"`
