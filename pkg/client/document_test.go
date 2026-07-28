@@ -10,13 +10,17 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/hansmi/paperhooks/internal/testutil"
 	"github.com/jarcoal/httpmock"
 )
 
 func TestGetDocument(t *testing.T) {
+	plus2 := time.FixedZone("UTC+2", 2*60*60)
+
 	for _, tc := range []struct {
 		name    string
 		setup   func(*testing.T, *httpmock.MockTransport)
+		loc     *time.Location
 		id      int64
 		want    *Document
 		wantErr error
@@ -51,12 +55,31 @@ func TestGetDocument(t *testing.T) {
 						"modified": "2026-07-23T08:09:10Z"
 					}`))
 			},
-			id: 8128,
+			loc: time.UTC,
+			id:  8128,
 			want: &Document{
 				ID:       8128,
 				Title:    "second",
 				Created:  time.Date(2026, time.July, 23, 0, 0, 0, 0, time.UTC),
 				Modified: time.Date(2026, time.July, 23, 8, 9, 10, 0, time.UTC),
+			},
+		},
+		{
+			// Date-only values are interpreted as midnight in the server's
+			// timezone.
+			name: "created with date only in server timezone",
+			setup: func(t *testing.T, transport *httpmock.MockTransport) {
+				transport.RegisterResponder(http.MethodGet, "/api/documents/8130/",
+					httpmock.NewStringResponder(http.StatusOK, `{
+						"id": 8130,
+						"created": "2026-07-23"
+					}`))
+			},
+			loc: plus2,
+			id:  8130,
+			want: &Document{
+				ID:      8130,
+				Created: time.Date(2026, time.July, 23, 0, 0, 0, 0, plus2),
 			},
 		},
 		{
@@ -78,10 +101,11 @@ func TestGetDocument(t *testing.T) {
 			tc.setup(t, transport)
 
 			c := New(Options{
-				transport: transport,
+				transport:      transport,
+				ServerLocation: tc.loc,
 			})
 
-			got, _, err := c.GetDocument(context.Background(), tc.id)
+			got, _, err := c.GetDocument(t.Context(), tc.id)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetDocument() error diff (-want +got):\n%s", diff)
@@ -91,8 +115,51 @@ func TestGetDocument(t *testing.T) {
 				if diff := cmp.Diff(tc.want, got, cmpopts.EquateEmpty()); diff != "" {
 					t.Errorf("GetDocument() result diff (-want +got):\n%s", diff)
 				}
+
+				if diff := cmp.Diff(tc.want.Created.Location(), got.Created.Location(), testutil.EquateTimeLocation()); diff != "" {
+					t.Errorf("GetDocument() Created location diff (-want +got):\n%s", diff)
+				}
 			}
 		})
+	}
+}
+
+func TestListDocumentsDateOnly(t *testing.T) {
+	plus2 := time.FixedZone("UTC+2", 2*60*60)
+
+	transport := newMockTransport(t)
+	transport.RegisterResponder(http.MethodGet, "/api/documents/",
+		httpmock.NewStringResponder(http.StatusOK, `{
+			"count": 2,
+			"next": null,
+			"previous": null,
+			"results": [
+				{ "id": 1, "created": "2026-07-23" },
+				{ "id": 2, "created": "2023-06-30T22:00:00Z" }
+			]
+		}`))
+
+	c := New(Options{
+		transport:      transport,
+		ServerLocation: plus2,
+	})
+
+	got, _, err := c.ListDocuments(t.Context(), ListDocumentsOptions{})
+	if err != nil {
+		t.Fatalf("ListDocuments() failed: %v", err)
+	}
+
+	want := []Document{
+		{ID: 1, Created: time.Date(2026, time.July, 23, 0, 0, 0, 0, plus2)},
+		{ID: 2, Created: time.Date(2023, time.June, 30, 22, 0, 0, 0, time.UTC)},
+	}
+
+	if diff := cmp.Diff(want, got, cmpopts.EquateEmpty()); diff != "" {
+		t.Errorf("ListDocuments() diff (-want +got):\n%s", diff)
+	}
+
+	if diff := cmp.Diff(plus2, got[0].Created.Location(), testutil.EquateTimeLocation()); diff != "" {
+		t.Errorf("ListDocuments() Created location diff (-want +got):\n%s", diff)
 	}
 }
 
