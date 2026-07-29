@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"net/http"
 	"testing"
 
@@ -57,7 +56,7 @@ func TestGetRemoteVersion(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.GetRemoteVersion(context.Background())
+			got, _, err := c.GetRemoteVersion(t.Context())
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetRemoteVersion() error diff (-want +got):\n%s", diff)

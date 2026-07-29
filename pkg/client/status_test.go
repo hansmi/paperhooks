@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"net/http"
 	"testing"
 	"time"
@@ -182,7 +181,7 @@ func TestGetStatus(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.GetStatus(context.Background())
+			got, _, err := c.GetStatus(t.Context())
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetStatus() error diff (-want +got):\n%s", diff)

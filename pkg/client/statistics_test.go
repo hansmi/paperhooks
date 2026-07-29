@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"net/http"
 	"testing"
 
@@ -95,7 +94,7 @@ func TestGetStatistics(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.GetStatistics(context.Background())
+			got, _, err := c.GetStatistics(t.Context())
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetStatistics() error diff (-want +got):\n%s", diff)

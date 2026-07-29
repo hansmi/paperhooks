@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"testing"
@@ -119,7 +118,7 @@ func TestListTasks(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.ListTasks(context.Background())
+			got, _, err := c.ListTasks(t.Context())
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("ListTasks() error diff (-want +got):\n%s", diff)
@@ -211,7 +210,7 @@ func TestGetTask(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.GetTask(context.Background(), tc.id)
+			got, _, err := c.GetTask(t.Context(), tc.id)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetTask() error diff (-want +got):\n%s", diff)

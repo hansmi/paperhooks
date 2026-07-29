@@ -2,7 +2,6 @@ package client
 
 import (
 	"bytes"
-	"context"
 	"net/http"
 	"testing"
 
@@ -72,7 +71,7 @@ func TestDownload(t *testing.T) {
 
 			var buf bytes.Buffer
 
-			got, _, err := c.download(context.Background(), &buf, tc.url, true)
+			got, _, err := c.download(t.Context(), &buf, tc.url, true)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("DownloadDocument() error diff (-want +got):\n%s", diff)

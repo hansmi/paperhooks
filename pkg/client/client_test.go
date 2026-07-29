@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"crypto/x509"
 	"errors"
 	"io"
@@ -102,7 +101,7 @@ func TestClient(t *testing.T) {
 
 			tc.opts.transport = transport
 
-			err := New(tc.opts).Ping(context.Background())
+			err := New(tc.opts).Ping(t.Context())
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("Ping() error diff (-want +got):\n%s", diff)
