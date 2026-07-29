@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"net/http"
 	"testing"
 	"time"
@@ -54,7 +53,7 @@ func TestListLogs(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.ListLogs(context.Background())
+			got, _, err := c.ListLogs(t.Context())
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("ListLogs() error diff (-want +got):\n%s", diff)
@@ -197,7 +196,7 @@ func TestGetLog(t *testing.T) {
 				transport:      transport,
 			})
 
-			got, _, err := c.GetLog(context.Background(), tc.logName)
+			got, _, err := c.GetLog(t.Context(), tc.logName)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetLog() error diff (-want +got):\n%s", diff)

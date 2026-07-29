@@ -158,7 +158,7 @@ func TestListTags(t *testing.T) {
 				transport: transport,
 			})
 
-			got, resp, err := c.ListTags(context.Background(), tc.opts)
+			got, resp, err := c.ListTags(t.Context(), tc.opts)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("ListTags() error diff (-want +got):\n%s", diff)
@@ -235,7 +235,7 @@ func TestListAllTags(t *testing.T) {
 
 			var got []Tag
 
-			err := c.ListAllTags(context.Background(), tc.opts, func(_ context.Context, v Tag) error {
+			err := c.ListAllTags(t.Context(), tc.opts, func(_ context.Context, v Tag) error {
 				got = append(got, v)
 				return nil
 			})
@@ -286,7 +286,7 @@ func TestListAllTagsHandlerCancelsContext(t *testing.T) {
 		transport: transport,
 	})
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 	t.Cleanup(cancel)
 
 	var count atomic.Int64
@@ -353,7 +353,7 @@ func TestGetTag(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.GetTag(context.Background(), tc.id)
+			got, _, err := c.GetTag(t.Context(), tc.id)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetTag() error diff (-want +got):\n%s", diff)
@@ -423,7 +423,7 @@ func TestCreateTag(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.CreateTag(context.Background(), tc.input)
+			got, _, err := c.CreateTag(t.Context(), tc.input)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("CreateTag() error diff (-want +got):\n%s", diff)
@@ -487,7 +487,7 @@ func TestUpdateTag(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.UpdateTag(context.Background(), tc.id, tc.input)
+			got, _, err := c.UpdateTag(t.Context(), tc.id, tc.input)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("UpdateTag() error diff (-want +got):\n%s", diff)
@@ -561,7 +561,7 @@ func TestPatchTag(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.PatchTag(context.Background(), tc.id, tc.input)
+			got, _, err := c.PatchTag(t.Context(), tc.id, tc.input)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("PatchTag() error diff (-want +got):\n%s", diff)
@@ -613,7 +613,7 @@ func TestDeleteTag(t *testing.T) {
 				transport: transport,
 			})
 
-			_, err := c.DeleteTag(context.Background(), tc.id)
+			_, err := c.DeleteTag(t.Context(), tc.id)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("DeleteTag() error diff (-want +got):\n%s", diff)

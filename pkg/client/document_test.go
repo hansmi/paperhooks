@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"io"
 	"net/http"
 	"path/filepath"
@@ -57,7 +56,7 @@ func TestGetDocumentMetadata(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.GetDocumentMetadata(context.Background(), tc.id)
+			got, _, err := c.GetDocumentMetadata(t.Context(), tc.id)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetDocumentMetadata() error diff (-want +got):\n%s", diff)
@@ -136,7 +135,7 @@ func TestUploadDocument(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.UploadDocument(context.Background(), tc.r, tc.opts)
+			got, _, err := c.UploadDocument(t.Context(), tc.r, tc.opts)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("UploadDocument() error diff (-want +got):\n%s", diff)

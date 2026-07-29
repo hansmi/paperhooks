@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"net/http"
 	"testing"
 
@@ -61,7 +60,7 @@ func TestGetCurrentUser(t *testing.T) {
 				transport: transport,
 			})
 
-			got, _, err := c.GetCurrentUser(context.Background())
+			got, _, err := c.GetCurrentUser(t.Context())
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("GetCurrentUser() error diff (-want +got):\n%s", diff)

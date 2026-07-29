@@ -111,7 +111,7 @@ func TestTaskWaiter(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
 			t.Cleanup(cancel)
 
 			w := taskWaiter{
@@ -236,7 +236,7 @@ func TestWaitForTask(t *testing.T) {
 
 			tc.opts.MaxElapsedTime = time.Second
 
-			got, err := c.WaitForTask(context.Background(), tc.taskID, tc.opts)
+			got, err := c.WaitForTask(t.Context(), tc.taskID, tc.opts)
 
 			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
 				t.Errorf("WaitForTask() error diff (-want +got):\n%s", diff)
