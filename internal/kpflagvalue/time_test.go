@@ -57,3 +57,42 @@ func TestTime(t *testing.T) {
 		})
 	}
 }
+
+func TestOptionalTime(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		value   string
+		wantErr error
+		want    *time.Time
+	}{
+		{
+			name: "empty",
+		},
+		{
+			name:    "bad value",
+			value:   "nope",
+			wantErr: cmpopts.AnyError,
+		},
+		{
+			name:  "success",
+			value: "2020-12-31T13:07:14-05:00",
+			want:  new(time.Date(2020, time.December, 31, 13+5, 07, 14, 0, time.UTC)),
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			got := new(time.Now())
+
+			err := (&optionalTimeValue{&got}).Set(tc.value)
+
+			if diff := cmp.Diff(tc.wantErr, err, cmpopts.EquateErrors()); diff != "" {
+				t.Errorf("Set() error diff (-want +got):\n%s", diff)
+			}
+
+			if err == nil {
+				if diff := cmp.Diff(tc.want, got); diff != "" {
+					t.Errorf("Parsed time diff (-want +got):\n%s", diff)
+				}
+			}
+		})
+	}
+}
