@@ -10,61 +10,63 @@ import (
 
 // RegisterClient adds flags for creating a Paperless-ngx API client.
 func RegisterClient(g FlagGroup, f *client.Flags) {
-	b := builder{g}
+	b := toBuilder(g, BuilderOptions{
+		EnableEnvVars: true,
+	})
 
-	b.flag("paperless_url", "Base URL for accessing Paperless.").
+	b.Flag("paperless_url", "Base URL for accessing Paperless.").
 		PlaceHolder("URL").
 		StringVar(&f.BaseURL)
 
-	b.flag("paperless_trusted_ca_file", "Read X.509 certificate authorities (CA) to verify the server from file. May contain multiple certificates and must be PEM-encoded.").
+	b.Flag("paperless_trusted_ca_file", "Read X.509 certificate authorities (CA) to verify the server from file. May contain multiple certificates and must be PEM-encoded.").
 		PlaceHolder("FILE").
 		StringsVar(&f.TrustedRootCAFiles)
 
-	b.flag("paperless_max_concurrent_requests", "Number of requests allowed to be in flight at the same time. Defaults to zero (disabled).").
+	b.Flag("paperless_max_concurrent_requests", "Number of requests allowed to be in flight at the same time. Defaults to zero (disabled).").
 		PlaceHolder("NUM").
 		IntVar(&f.MaxConcurrentRequests)
 
-	b.flag("paperless_auth_token", "Authentication token for Paperless. Reading the token from a file is preferable.").
+	b.Flag("paperless_auth_token", "Authentication token for Paperless. Reading the token from a file is preferable.").
 		PlaceHolder("TOKEN").
 		StringVar(&f.AuthToken)
 
-	b.flag("paperless_auth_token_file", "File containing authentication token for Paperless.").
+	b.Flag("paperless_auth_token_file", "File containing authentication token for Paperless.").
 		PlaceHolder("PATH").
 		StringVar(&f.AuthTokenFile)
 
-	b.flag("paperless_auth_username", "Username for HTTP basic authentication.").
+	b.Flag("paperless_auth_username", "Username for HTTP basic authentication.").
 		PlaceHolder("NAME").
 		StringVar(&f.AuthUsername)
 
-	b.flag("paperless_auth_password", "Password for HTTP basic authentication. Reading the password from a file is preferable.").
+	b.Flag("paperless_auth_password", "Password for HTTP basic authentication. Reading the password from a file is preferable.").
 		PlaceHolder("PASSWORD").
 		StringVar(&f.AuthPassword)
 
-	b.flag("paperless_auth_password_file", "Username for HTTP basic authentication.").
+	b.Flag("paperless_auth_password_file", "Username for HTTP basic authentication.").
 		PlaceHolder("PATH").
 		StringVar(&f.AuthPasswordFile)
 
-	b.flag("paperless_auth_gcp_service_account_key_file", "Authenticate using OpenID Connect (OIDC) ID tokens derived from a Google Cloud Platform service account key file.").
+	b.Flag("paperless_auth_gcp_service_account_key_file", "Authenticate using OpenID Connect (OIDC) ID tokens derived from a Google Cloud Platform service account key file.").
 		PlaceHolder("PATH").
 		StringVar(&f.AuthGCPServiceAccountKeyFile)
 
-	b.flag("paperless_auth_oidc_id_token_audience", "Target audience for OpenID Connect (OIDC) ID tokens. Defaults to the base URL.").
+	b.Flag("paperless_auth_oidc_id_token_audience", "Target audience for OpenID Connect (OIDC) ID tokens. Defaults to the base URL.").
 		PlaceHolder("STRING").
 		StringVar(&f.AuthOIDCIDTokenAudience)
 
 	kpflagvalue.HTTPHeaderVar(
-		b.flag("paperless_header", "HTTP headers to set on all requests to Paperless.").
+		b.Flag("paperless_header", "HTTP headers to set on all requests to Paperless.").
 			PlaceHolder("KEY:VALUE"),
 		&f.Header)
 
-	b.flag("paperless_api_version", fmt.Sprintf("Paperless REST API version to use. Defaults to %d.", client.DefaultAPIVersion)).
+	b.Flag("paperless_api_version", fmt.Sprintf("Paperless REST API version to use. Defaults to %d.", client.DefaultAPIVersion)).
 		PlaceHolder("NUM").
 		IntVar(&f.APIVersion)
 
-	b.flag("paperless_server_timezone", fmt.Sprintf("Timezone for parsing timestamps. Defaults to %q.", time.Local.String())).
+	b.Flag("paperless_server_timezone", fmt.Sprintf("Timezone for parsing timestamps. Defaults to %q.", time.Local.String())).
 		PlaceHolder("AREA/LOCATION").
 		StringVar(&f.ServerTimezone)
 
-	b.flag("paperless_client_debug", "Enable verbose logging messages.").
+	b.Flag("paperless_client_debug", "Enable verbose logging messages.").
 		BoolVar(&f.DebugMode)
 }
