@@ -2,7 +2,7 @@ package kpflag
 
 import "github.com/hansmi/paperhooks/pkg/client"
 
-// RegisterClient adds flags for filtering a list of documents.
+// RegisterListDocumentsOptions adds flags for filtering a list of documents.
 func RegisterListDocumentsOptions(g FlagGroup, o *client.ListDocumentsOptions) {
 	b := toBuilder(g, BuilderOptions{})
 
