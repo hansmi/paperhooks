@@ -73,7 +73,7 @@ func registerIntFilterSpec(b *Builder, s *client.IntFilterSpec, name, help strin
 		suffix string
 		target **int64
 	}{
-		{suffix: "exact", target: &s.Equals},
+		{suffix: "equals", target: &s.Equals},
 		{suffix: "lt", target: &s.Lt},
 		{suffix: "lte", target: &s.Lte},
 		{suffix: "gte", target: &s.Gte},
